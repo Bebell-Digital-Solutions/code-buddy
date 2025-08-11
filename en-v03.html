@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Buddy - AI Coding Assistant, powered by DeepSeek</title>
+  
+  <!-- Preconnect to CDNs for faster loading -->
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Required Libraries -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/react-markdown@8.0.7/dist/react-markdown.min.js"></script>
+  <script src="https://unpkg.com/remark-gfm@3.0.1/dist/remark-gfm.min.js"></script>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
+  <!-- Add Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="https://bucket.mlcdn.com/a/3336/3336910/images/d7589a2b7ec7033c2395042f615b8c5d96cc06af.png">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'brand-pink': '#DF1783',
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    .custom-image-widget {
+      position: fixed !important;
+      top: 80px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      right: 0px;
+      z-index: 999;
+    }
+    
+    .custom-image {
+      width: 70px;
+      height: auto;
+      transition: transform 0.2s;
+    }
+    
+    .custom-image-widget:hover .custom-image {
+      transform: scale(1.05);
+    }  
+
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    @keyframes loading-anim {
+      0% { background-position: -800px 0; }
+      100% { background-position: 800px 0; }
+    }
+    
+    .loading-bar-anim {
+      background: linear-gradient(to right, #DF1783, #e2e8f0, #DF1783);
+      background-size: 800px 100%;
+      animation: loading-anim 3s linear infinite;
+    }
+    
+    .dark .loading-bar-anim {
+      background: linear-gradient(to right, #DF1783, #1f2937, #DF1783);
+      background-size: 800px 100%;
+      animation: loading-anim 3s linear infinite;
+    }
+    
+    .markdown-content {
+      line-height: 1.6;
+    }
+    
+    .markdown-content p {
+      margin-bottom: 1em;
+    }
+    
+    .markdown-content pre {
+      margin: 1.5em 0;
+      padding: 1em;
+      border-radius: 8px;
+      overflow-x: auto;
+      background: #f8f8f8;
+      border-left: 4px solid #DF1783;
+    }
+    
+    .dark .markdown-content pre {
+      background: #1e293b;
+    }
+    
+    .markdown-content code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9em;
+    }
+    
+    .markdown-content h1, 
+    .markdown-content h2, 
+    .markdown-content h3, 
+    .markdown-content h4 {
+      margin-top: 1.5em;
+      margin-bottom: 0.75em;
+      font-weight: 600;
+      color: inherit;
+    }
+    
+    .markdown-content ul,
+    .markdown-content ol {
+      margin-left: 1.5em;
+      margin-bottom: 1em;
+    }
+    
+    .markdown-content li {
+      margin-bottom: 0.5em;
+    }
+    
+    .markdown-content blockquote {
+      border-left: 4px solid #DF1783;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: #4b5563;
+    }
+    
+    .dark .markdown-content blockquote {
+      color: #9ca3af;
+    }
+    
+    .markdown-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+    
+    .markdown-content th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+    
+    .markdown-content td, 
+    .markdown-content th {
+      border: 1px solid #e5e7eb;
+      padding: 0.5rem 1rem;
+    }
+    
+    .dark .markdown-content th {
+      background-color: #374151;
+    }
+    
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .emoji {
+      font-size: 1.2em;
+      margin-right: 4px;
+    }
+    
+    .suggestion-text {
+      margin: 0;
+      display: inline;
+    }
+    
+    .suggestion-item br {
+      display: block;
+      content: "";
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body class="font-sans bg-white dark:bg-gray-900 transition-colors duration-300">
+  <div class="custom-image-widget" style="position: relative; display: inline-block;">
+    <a href="https://bebell-digital-solutions.github.io/code-buddy/spanish">
+      <img class="custom-image" 
+           src="https://bucket.mlcdn.com/a/3336/3336910/images/138f14304ea21715dfae64ae5fe1d71b08c2d451.png" 
+           alt="English Translation"
+           style="display: block;">
+    </a>
+  </div>
+  
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    // Safety checks first
+    if (typeof ReactMarkdown === 'undefined') {
+      window.ReactMarkdown = ({ children }) => <div>{children}</div>;
+      console.warn("ReactMarkdown not loaded - using fallback");
+    }
+
+    if (typeof remarkGfm === 'undefined') {
+      window.remarkGfm = null;
+      console.warn("remarkGfm not loaded - markdown features limited");
+    }
+
+    // Helper to always get the correct plugin reference
+    const gfmPlugin =
+      (typeof remarkGfm !== 'undefined' && (remarkGfm?.default || remarkGfm)) || null;
+
+    const { useState, useEffect, useRef, useCallback } = React;
+    
+    // Unique ID generator
+    const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;   
+    
+    // Constants
+    const MessageSender = {
+      USER: 'user',
+      BOT: 'bot',
+    };
+
+    const SUGGESTIONS = [
+      // Core Programming
+      { 
+        text: "🎯 Write a [language] program that [function] with [specific requirement]", 
+        icon: "code",
+        example: "e.g., 'Write a Python program that calculates factorial with recursive function'"
+      },
+      
+      // HTML/CSS Components
+      { 
+        text: "🚀 Create a [component] with background: [color/hex] and [specific style attribute: value]", 
+        icon: "palette",
+        example: "e.g., 'Create a button with background: #4CAF50 and hover effect: scale(1.05)'"
+      },
+      { 
+        text: "🚀 Build a [type] navigation bar with [color: hex] and [height: px] for [device type]", 
+        icon: "menu",
+        example: "e.g., 'Build a sticky navigation bar with #2c3e50 and 80px height for mobile'"
+      },
+
+      // Interactive Elements
+      { 
+        text: "🔮 Make a [element] that [action] when [event] with [color/style: value]", 
+        icon: "touch_app",
+        example: "e.g., 'Make a div that rotates 45deg when clicked with border: 2px dashed #e74c3c'"
+      },
+      { 
+        text: "🔮 Create [number] [type] cards with [width x height] and [animation: type]", 
+        icon: "dashboard",
+        example: "e.g., 'Create 6 product cards with 300x200px and animation: fade-in'"
+      },
+
+      // Mini Applications
+      { 
+        text: "📱 Build a [app type] with [feature 1] and [feature 2] using [framework: yes/no]", 
+        icon: "apps",
+        example: "e.g., 'Build a weather app with 5-day forecast and location detection using React: yes'"
+      },
+      { 
+        text: "📱 Create [theme 1]/[theme 2] [app type] with [primary color] and [font: name]", 
+        icon: "contrast",
+        example: "e.g., 'Create light/dark calculator with #3498db and font: Roboto'"
+      },
+
+      // Page Templates
+      { 
+        text: "🌐 Design a [page type] for [industry] using [color palette] and [layout type]", 
+        icon: "web",
+        example: "e.g., 'Design a landing page for bakery using pastel colors and grid layout'"
+      },
+      { 
+        text: "🌐 Make [type] form with [field count] fields and [validation type] in [color scheme]", 
+        icon: "form",
+        example: "e.g., 'Make registration form with 5 fields and real-time validation in blue/white'"
+      },
+
+      // Games & Tools
+      { 
+        text: "🎮 Create [game type] with [difficulty] level and [theme color] UI", 
+        icon: "sports_esports",
+        example: "e.g., 'Create memory game with medium difficulty and space-themed UI'"
+      },
+      { 
+        text: "🛠️ Build [tool type] that outputs [format] with [customization option]", 
+        icon: "build",
+        example: "e.g., 'Build gradient generator that outputs CSS with angle picker'"
+      },
+
+      // Special Templates
+      { 
+        text: "✨ Generate [UI element] with [style] effect and [responsive behavior]", 
+        icon: "auto_awesome",
+        example: "e.g., 'Generate modal with glassmorphism effect and mobile-first behavior'"
+      },
+      { 
+        text: "✨ Make [type] loader with [animation duration] and [color sequence]", 
+        icon: "loop",
+        example: "e.g., 'Make progress bar loader with 2s duration and rainbow colors'"
+      }
+    ];
+
+    const MASTER_PROMPT = `
+You are Code Buddy, an expert AI Coding Assistant powered by DeepSeek, specializing in helping developers of all levels write clean, efficient, and production-ready code.
+
+Before providing solutions, always ask clarifying questions to ensure you fully understand:
+1. The exact requirements and goals
+2. Preferred programming language/stack
+3. Any specific constraints or preferences
+4. The user's skill level to tailor explanations
+
+For example:
+"Before I provide the solution, could you clarify:
+- What specific functionality are you looking for?
+- Do you have any preferred technologies or frameworks?
+- Should this be optimized for performance or readability?
+- What's your experience level with this technology?"
+
+Only proceed with a complete solution when you're confident you understand all requirements. Break down complex solutions into clear steps with explanations.
+`;
+
+    const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+    const DEEPSEEK_MODEL = 'deepseek-chat';
+
+    // Error Boundary Component
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+      }
+
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+      }
+
+      componentDidCatch(error, errorInfo) {
+        console.error("Error caught:", error, errorInfo);
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-900">
+              <div className="text-center p-8 max-w-md">
+                <h2 className="text-2xl font-bold text-red-500 mb-4">Something went wrong</h2>
+                <p className="text-gray-700 dark:text-gray-300 mb-6">{this.state.error.message}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-6 py-2 bg-brand-pink text-white rounded-full font-medium hover:opacity-90"
+                >
+                  Reload Page
+                </button>
+              </div>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
+    
+    // Components
+    const BotIcon = () => (
+      <svg 
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-6 h-6 text-brand-pink"
+      >
+        <path d="M12 8V4H8"/>
+        <rect width="16" height="12" x="4" y="8" rx="2"/>
+        <path d="M2 14h2"/>
+        <path d="M20 14h2"/>
+        <path d="M15 13v2"/>
+        <path d="M9 13v2"/>
+      </svg>
+    );
+
+    const UserIcon = () => (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-500 dark:text-gray-400">
+        <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+      </svg>
+    );
+
+    const LoadingIndicator = () => (
+      <div className="flex flex-col gap-2 w-full">
+        <div className="loading-bar-anim h-3 rounded-sm w-full"></div>
+        <div className="loading-bar-anim h-3 rounded-sm w-4/5"></div>
+        <div className="loading-bar-anim h-3 rounded-sm w-3/5"></div>
+      </div>
+    );
+    
+    const IconButton = ({ onClick, icon, label, disabled = false, className = '' }) => (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={label}
+        disabled={disabled}
+        className={`w-14 h-14 flex-shrink-0 flex items-center justify-center rounded-full bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      >
+        <span className="material-symbols-rounded text-2xl">{icon}</span>
+      </button>
+    );
+
+    // Updated ApiKeyModal with name field
+    const ApiKeyModal = ({ onSave, onDelete, onClose, currentKey }) => {
+      const [key, setKey] = useState(currentKey || '');
+      const [name, setName] = useState(() => localStorage.getItem('user-name') || '');
+      const [error, setError] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!key.trim()) {
+          setError('API key is required');
+          return;
+        }
+        onSave(key.trim(), name.trim());
+      };
+
+      const handleDelete = () => {
+        onDelete();
+        setKey('');
+        setName('');
+        onClose();
+      };
+
+      return (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg">
+            <header className="p-5 border-b border-slate-200 dark:border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Manage DeepSeek API Key</h2>
+              {currentKey && (
+                <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-700">
+                  <span className="material-symbols-rounded text-gray-600 dark:text-gray-300">close</span>
+                </button>
+              )}
+            </header>
+            
+            <form onSubmit={handleSubmit}>
+              <div className="p-6 space-y-4">
+                <p className="text-gray-600 dark:text-gray-400"><strong>Note:</strong> Your API key and name are stored locally in your browser.</p>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">API Key*</label>
+                  <input 
+                    type="password" 
+                    value={key} 
+                    onChange={e => {
+                      setKey(e.target.value);
+                      setError('');
+                    }} 
+                    placeholder="Paste your API key here" 
+                    className="w-full h-12 px-4 rounded-lg bg-slate-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-pink" 
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Username (Optional)</label>
+                  <input 
+                    type="text" 
+                    value={name} 
+                    onChange={e => setName(e.target.value)} 
+                    placeholder="Enter your name" 
+                    className="w-full h-12 px-4 rounded-lg bg-slate-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-pink" 
+                  />
+                </div>
+                
+                {error && <p className="mt-2 text-red-500 text-sm">{error}</p>}
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <a href="https://platform.deepseek.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-brand-pink hover:underline">Get your API key</a>
+                </div>
+              </div>
+              
+              <footer className="px-6 py-4 bg-slate-50 dark:bg-gray-800/50 border-t border-slate-200 dark:border-gray-700 flex justify-between items-center">
+                {currentKey ? (
+                  <button type="button" onClick={handleDelete} className="px-4 py-2 text-sm bg-red-600/10 text-red-600 dark:text-red-400 rounded-full font-semibold hover:bg-red-600/20 transition-colors">Delete Key</button>
+                ) : <div></div>}
+                <button type="submit" className="px-6 py-2.5 bg-brand-pink text-white rounded-full font-semibold hover:opacity-90 transition-opacity">
+                  {currentKey ? 'Save Changes' : 'Save and Start'}
+                </button>
+              </footer>
+            </form>
+          </div>
+        </div>
+      );
+    };
+    
+    // ChatMessage component
+    const ChatMessage = ({ message }) => {
+      const [copyIcon, setCopyIcon] = useState('content_copy');
+      const isBot = message.sender === MessageSender.BOT;
+      const isLoading = isBot && message.text === '' && !message.isError;
+      const userName = localStorage.getItem('user-name') || 'You';
+
+      const handleCopy = () => {
+        if (message.text) {
+          navigator.clipboard.writeText(message.text);
+          setCopyIcon('done');
+          setTimeout(() => setCopyIcon('content_copy'), 1500);
+        }
+      };
+
+      const messageContentClass = message.isError ? 'text-red-500' : 'text-gray-800 dark:text-gray-200';
+
+      return (
+        <div className="group mb-6">
+          <div className="flex items-start gap-4 max-w-4xl mx-auto">
+            <div className="w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center bg-slate-100 dark:bg-gray-800">
+              {isBot ? <BotIcon /> : <UserIcon />}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {isBot ? "Code Buddy" : userName}
+                </span>
+              </div>
+              
+              {(isBot && isLoading) ? <LoadingIndicator /> : (
+                <div className={`markdown-content ${messageContentClass}`}>
+                  <ReactMarkdown 
+                    remarkPlugins={gfmPlugin ? [gfmPlugin] : []}
+                    components={{
+                      h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700" {...props} />,
+                      h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700" {...props} />,
+                      h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-4 mb-2 text-brand-pink" {...props} />,
+                      p: ({node, ...props}) => <p className="my-3 leading-relaxed" {...props} />,
+                      ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 my-3" {...props} />,
+                      ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1 my-3" {...props} />,
+                      li: ({node, ...props}) => <li className="pl-2" {...props} />,
+                      pre: ({node, ...props}) => (
+                        <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-4" {...props} />
+                      ),
+                      code: ({node, inline, ...props}) => inline ? (
+                        <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm" {...props} />
+                      ) : (
+                        <code className="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm my-4" {...props} />
+                      ),
+                      blockquote: ({node, ...props}) => (
+                        <blockquote className="border-l-4 border-brand-pink pl-4 italic text-gray-600 dark:text-gray-300 my-4" {...props} />
+                      ),
+                      table: ({node, ...props}) => (
+                        <div className="overflow-x-auto my-4">
+                          <table className="min-w-full border-collapse" {...props} />
+                        </div>
+                      ),
+                      th: ({node, ...props}) => (
+                        <th className="bg-gray-100 dark:bg-gray-700 px-4 py-2 text-left border border-gray-200 dark:border-gray-600" {...props} />
+                      ),
+                      td: ({node, ...props}) => (
+                        <td className="px-4 py-2 border border-gray-200 dark:border-gray-600" {...props} />
+                      ),
+                      a: ({node, ...props}) => <a className="text-brand-pink hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
+                    }}
+                  >
+                    {message.text}
+                  </ReactMarkdown>
+                </div>
+              )}
+            </div>
+            {isBot && !isLoading && !message.isError && (
+              <button 
+                onClick={handleCopy} 
+                className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+              >
+                <span className="material-symbols-rounded text-lg">{copyIcon}</span>
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    };
+    
+    // ChatView component
+    const ChatView = ({ messages }) => {
+      const chatEndRef = useRef(null);
+      
+      useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [messages]);
+
+      return (
+        <div className="flex-1 overflow-y-auto px-4 pt-4 pb-36 sm:pb-32">
+          <div className="max-w-4xl mx-auto">
+            {messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+            <div ref={chatEndRef} />
+          </div>
+        </div>
+      );
+    };
+    
+    // SuggestionCard component
+    const SuggestionCard = ({ text, icon, onClick }) => (
+      <div onClick={onClick} className="group cursor-pointer p-5 flex-shrink-0 w-56 h-56 flex flex-col justify-between rounded-2xl bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors duration-200">
+        <h4 className="text-base font-medium text-gray-800 dark:text-gray-200">{text}</h4>
+        <div className="self-end w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 shadow-[inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px_rgba(0,0,0,0.1)] dark:bg-gradient-to-br dark:from-gray-600 dark:via-gray-700 dark:to-gray-800 dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3),inset_0_-2px_4px_rgba(255,255,255,0.1)] transition-all duration-300 group-hover:bg-gradient-to-tr group-hover:from-[#df1783] group-hover:to-[#fd5d93] group-hover:shadow-none">
+          <span className="material-symbols-rounded text-2xl text-transparent bg-clip-text bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-200 dark:to-gray-400 group-hover:text-white group-hover:bg-none">
+            {icon}
+          </span>
+        </div>
+      </div>
+    );
+
+    // Header component
+    const Header = ({ onSuggestionClick, userName }) => {
+      return (
+        <header className={'flex-1 overflow-y-auto px-4 pt-16 pb-8 sm:pt-24 lg:pt-28'}>
+          <div className="max-w-4xl mx-auto">
+            <div>
+              <h1 className="text-5xl sm:text-6xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-brand-pink to-purple-500">
+                {userName ? `Hello, ${userName}` : 'Hello, there'}
+              </h1>
+              <p className="text-4xl sm:text-5xl font-medium text-gray-400 dark:text-gray-500 mt-2">What are we working on today?</p>
+            </div>
+            <div className="mt-16 sm:mt-24">
+              <div className="flex gap-5 pb-4 -mx-4 px-4 overflow-x-auto">
+                {SUGGESTIONS.map((s, i) => (
+                  <SuggestionCard 
+                    key={i} 
+                    text={s.text} 
+                    icon={s.icon} 
+                    onClick={() => onSuggestionClick(s.text)} 
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </header>
+      );
+    };
+    
+    // FileUploadModal component
+    const FileUploadModal = ({ uploadedFiles, setUploadedFiles, onClose }) => {
+      const [error, setError] = useState(null);
+      const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+      const handleFileChange = useCallback(e => {
+        const files = e.target.files;
+        if (!files) return;
+        setError(null);
+        
+        const validFiles = Array.from(files).filter(file => {
+          if (file.size > MAX_FILE_SIZE) {
+            setError(`File "${file.name}" is too large (max 5MB).`);
+            return false;
+          }
+          return true;
+        });
+
+        validFiles.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            if(event.target?.result) {
+              setUploadedFiles(prev => [...prev.filter(f => f.name !== file.name), { 
+                name: file.name, 
+                content: event.target.result 
+              }]);
+            }
+          };
+          reader.onerror = () => setError(`Error reading file "${file.name}".`);
+          reader.readAsText(file);
+        });
+      }, [setUploadedFiles]);
+      
+      const removeFile = fileName => {
+        setUploadedFiles(prev => prev.filter(f => f.name !== fileName));
+      };
+
+      return (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <header className="p-5 border-b border-slate-200 dark:border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Upload Files for Context</h2>
+              <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-700">
+                <span className="material-symbols-rounded text-gray-600 dark:text-gray-300">close</span>
+              </button>
+            </header>
+            <div className="p-6 flex-1 overflow-y-auto">
+              <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
+                <span className="material-symbols-rounded text-5xl text-gray-400 dark:text-gray-500">cloud_upload</span>
+                <p className="mt-2 text-gray-600 dark:text-gray-300">Drag & drop files here, or click to select</p>
+                <input 
+                  type="file" 
+                  multiple 
+                  onChange={handleFileChange} 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                  accept=".txt,.md,.json,.csv,.html,.js,.ts" 
+                />
+              </div>
+              {error && <p className="mt-4 text-center text-red-500">{error}</p>}
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200">Uploaded Files ({uploadedFiles.length})</h3>
+                {uploadedFiles.length > 0 ? (
+                  <ul className="mt-3 space-y-2">
+                    {uploadedFiles.map(file => (
+                      <li key={file.name} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-gray-700 rounded-lg">
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <span className="material-symbols-rounded text-gray-500">description</span>
+                          <span className="truncate text-sm text-gray-700 dark:text-gray-200">{file.name}</span>
+                        </div>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFile(file.name);
+                          }} 
+                          className="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 text-red-500"
+                        >
+                          <span className="material-symbols-rounded text-lg">delete</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">No files uploaded yet.</p>
+                )}
+              </div>
+            </div>
+            <footer className="p-5 border-t border-slate-200 dark:border-gray-700 text-right">
+              <button 
+                onClick={onClose} 
+                className="px-6 py-2.5 bg-brand-pink text-white rounded-full font-semibold hover:opacity-90 transition-opacity"
+              >
+                Done
+              </button>
+            </footer>
+          </div>
+        </div>
+      );
+    };
+    
+    // ConversationsModal component
+    const ConversationsModal = ({ conversations, onSelectConversation, onClose, onDeleteConversation }) => {
+      return (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+            <header className="p-5 border-b border-slate-200 dark:border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Saved Conversations</h2>
+              <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-gray-700">
+                <span className="material-symbols-rounded text-gray-600 dark:text-gray-300">close</span>
+              </button>
+            </header>
+            
+            <div className="p-6 flex-1 overflow-y-auto">
+              {conversations.length > 0 ? (
+                <ul className="space-y-3">
+                  {conversations.map((conversation, index) => (
+                    <li key={conversation.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-gray-700 rounded-lg">
+                      <button 
+                        onClick={() => onSelectConversation(conversation)}
+                        className="flex-1 text-left text-gray-700 dark:text-gray-200 hover:text-brand-pink"
+                      >
+                        Conversation {index + 1} - {new Date(conversation.timestamp).toLocaleString()}
+                      </button>
+                      <button 
+                        onClick={() => onDeleteConversation(conversation.id)}
+                        className="p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 text-red-500 ml-2"
+                      >
+                        <span className="material-symbols-rounded text-lg">delete</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-center text-gray-500 dark:text-gray-400">No saved conversations yet.</p>
+              )}
+            </div>
+            
+            <footer className="p-5 border-t border-slate-200 dark:border-gray-700 text-right">
+              <button 
+                onClick={onClose} 
+                className="px-6 py-2.5 bg-brand-pink text-white rounded-full font-semibold hover:opacity-90 transition-opacity"
+              >
+                Close
+              </button>
+            </footer>
+          </div>
+        </div>
+      );
+    };
+    
+    // TypingArea component with updated features
+    const TypingArea = ({ onSendMessage, isLoading, theme, toggleTheme, onDeleteChat, onOpenUploadModal, onOpenApiKeyModal, onOpenConversationsModal, isApiConfigured, uploadedFilesCount, inputValue, setInputValue }) => {
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (inputValue.trim() && isApiConfigured) {
+          onSendMessage(inputValue);
+          setInputValue('');
+        }
+      };
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          handleSubmit(e);
+        }
+      };
+
+      return (
+        <div className="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-t border-slate-200 dark:border-gray-700">
+          <div className="max-w-4xl mx-auto px-4 pt-2 pb-4 sm:pb-4">
+            {uploadedFilesCount > 0 && isApiConfigured && (
+              <div className="flex justify-center mb-2">
+                <button 
+                  onClick={onOpenUploadModal} 
+                  className="flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm bg-slate-100 dark:bg-gray-800 rounded-full hover:bg-slate-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
+                  aria-label={`View ${uploadedFilesCount} attached files`}
+                >
+                  <span className="material-symbols-rounded text-base">attachment</span>
+                  <span>{uploadedFilesCount} file{uploadedFilesCount > 1 ? 's' : ''} in context</span>
+                </button>
+              </div>
+            )}
+            <div className="flex items-center gap-3">
+              <IconButton 
+                onClick={onOpenApiKeyModal} 
+                icon="key" 
+                label="Manage API Key" 
+                className="hidden sm:flex" 
+              />
+              <IconButton 
+                onClick={onOpenConversationsModal} 
+                icon="folder" 
+                label="Saved Conversations" 
+                className="hidden sm:flex" 
+              />
+              
+              <form onSubmit={handleSubmit} className="flex-1 relative">
+                <textarea
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={isApiConfigured ? "Enter a prompt here..." : "Please set your API key to begin."}
+                  required
+                  disabled={isLoading || !isApiConfigured}
+                  className="w-full h-14 min-h-[56px] max-h-32 pl-6 pr-16 py-4 rounded-full bg-slate-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-pink transition disabled:opacity-70 disabled:cursor-not-allowed resize-none flex items-center"
+                  rows={1}
+                  style={{ lineHeight: '24px' }}
+                />
+                
+                <button
+                  type="submit"
+                  disabled={isLoading || !isApiConfigured || !inputValue.trim()}
+                  className={`absolute right-0 top-0 h-14 w-14 flex items-center justify-center text-white rounded-full transition-transform transform ${inputValue.trim() && isApiConfigured ? 'scale-100' : 'scale-0'} ${isLoading ? 'bg-gray-500' : 'bg-brand-pink'} disabled:bg-gray-500`}
+                  aria-label="Send Message"
+                >
+                  <span className="material-symbols-rounded">send</span>
+                </button>
+              </form>
+              <div className="hidden sm:flex items-center gap-3">
+                <IconButton 
+                  onClick={onOpenUploadModal} 
+                  icon="upload_file" 
+                  label="Upload Files" 
+                  disabled={isLoading || !isApiConfigured} 
+                />
+                <IconButton 
+                  onClick={toggleTheme} 
+                  icon={theme === 'dark' ? 'light_mode' : 'dark_mode'} 
+                  label="Toggle Theme" 
+                />
+                <IconButton 
+                  onClick={onDeleteChat} 
+                  icon="delete" 
+                  label="Delete Chat" 
+                  disabled={isLoading || !isApiConfigured} 
+                />
+              </div>
+              <div className="sm:hidden flex">
+                <IconButton 
+                  onClick={onOpenApiKeyModal} 
+                  icon="key" 
+                  label="Manage API Key" 
+                />
+              </div>
+            </div>
+            <p className="hidden sm:block text-center text-xs text-gray-400 dark:text-gray-500 mt-3 px-4">
+              Code Buddy may display inaccurate info. Always double-check its responses.
+            </p>
+          </div>
+        </div>
+      );
+    };
+    
+    // Main App Component with all new features
+    const App = () => {
+      const [theme, setTheme] = useState(() => {
+        const savedTheme = localStorage.getItem("mega-bot-theme");
+        return savedTheme === 'light' || savedTheme === 'dark' 
+          ? savedTheme 
+          : window.matchMedia?.('(prefers-color-scheme: dark)').matches 
+            ? 'dark' 
+            : 'light';
+      });
+      
+      const [messages, setMessages] = useState([]);
+      const [isLoading, setIsLoading] = useState(false);
+      const [isFileModalOpen, setFileModalOpen] = useState(false);
+      const [uploadedFiles, setUploadedFiles] = useState([]);
+      const [apiKey, setApiKey] = useState(() => localStorage.getItem('deepseek-api-key') || null);
+      const [userName, setUserName] = useState(() => localStorage.getItem('user-name') || null);
+      const [showApiKeyModal, setShowApiKeyModal] = useState(!apiKey);
+      const [showConversationsModal, setShowConversationsModal] = useState(false);
+      const [conversations, setConversations] = useState(() => {
+        const saved = localStorage.getItem('aibad-conversations');
+        return saved ? JSON.parse(saved) : [];
+      });
+      const [initError, setInitError] = useState(null);
+      const [inputValue, setInputValue] = useState('');
+
+      useEffect(() => {
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        localStorage.setItem('mega-bot-theme', theme);
+      }, [theme]);
+
+      // Save conversations to localStorage when they change
+      useEffect(() => {
+        localStorage.setItem('code-buddy-conversations', JSON.stringify(conversations));
+      }, [conversations]);
+
+      const toggleTheme = useCallback(() => {
+        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+      }, []);
+
+      const handleSaveApiKey = useCallback((key, name = '') => {
+        try {
+          localStorage.setItem('deepseek-api-key', key);
+          if (name) {
+            localStorage.setItem('user-name', name);
+            setUserName(name);
+          } else {
+            localStorage.removeItem('user-name');
+            setUserName(null);
+          }
+          setApiKey(key);
+          setShowApiKeyModal(false);
+          setInitError(null);
+          
+          if (messages.length === 0) {
+            setMessages([{
+              id: 'bot-welcome',
+              sender: 'bot',
+              text: name 
+                ? `Hi ${name}! I'm Code Buddy, your AI Coding Assistant. How can I help you today?`
+                : "Hi there! I'm Code Buddy, your AI Coding Assistant. How can I help you today?",
+              isError: false
+            }]);
+          }
+        } catch (e) {
+          console.error("Failed to save settings:", e);
+          setInitError("Failed to save settings. Please check your browser settings.");
+        }
+      }, [messages]);
+
+      const handleDeleteApiKey = useCallback(() => {
+        localStorage.removeItem('deepseek-api-key');
+        localStorage.removeItem('user-name');
+        setApiKey(null);
+        setUserName(null);
+        setShowApiKeyModal(true);
+        setMessages([]);
+      }, []);
+
+      const handleSendMessage = useCallback(async (inputText) => {
+        if (!inputText.trim() || isLoading || !apiKey) return;
+        
+        setIsLoading(true);
+        const userMessage = { 
+          id: generateId(), 
+          sender: 'user', 
+          text: inputText 
+        };
+        const botMessage = { 
+          id: generateId(), 
+          sender: 'bot', 
+          text: '', 
+          isError: false 
+        };
+        
+        setMessages(prev => [...prev, userMessage, botMessage]);
+        
+        try {
+          const fileContext = uploadedFiles.map(f => `${f.name}:\n${f.content}`).join('\n\n');
+          
+          const messagesForApi = [
+            { role: 'system', content: MASTER_PROMPT },
+            ...messages.filter(msg => msg.sender !== 'bot' || msg.text).map(msg => ({
+              role: msg.sender === 'user' ? 'user' : 'assistant',
+              content: msg.text
+            })),
+            { role: 'user', content: fileContext ? `${fileContext}\n\n${inputText}` : inputText }
+          ];
+
+          const response = await fetch(DEEPSEEK_API_URL, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: DEEPSEEK_MODEL,
+              messages: messagesForApi,
+              stream: false,
+              temperature: 0.7
+            })
+          });
+
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.error?.message || `API request failed with status ${response.status}`);
+          }
+
+          const data = await response.json();
+          const content = data.choices[0]?.message?.content || '';
+          
+          setMessages(prev => prev.map(msg => 
+            msg.id === botMessage.id 
+              ? { ...msg, text: content } 
+              : msg
+          ));
+          
+          // Auto-save the conversation when bot responds
+          saveCurrentConversation();
+
+        } catch (error) {
+          console.error('API Error:', error);
+          setMessages(prev => prev.map(msg => 
+            msg.id === botMessage.id 
+              ? { ...msg, text: `Error: ${error.message}`, isError: true } 
+              : msg
+          ));
+          if (error.message.includes('401')) {
+            handleDeleteApiKey();
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      }, [apiKey, isLoading, messages, uploadedFiles, handleDeleteApiKey]);
+
+      const saveCurrentConversation = useCallback(() => {
+        if (messages.length === 0) return;
+        
+        const newConversation = {
+          id: generateId(),
+          timestamp: Date.now(),
+          messages: [...messages],
+          files: [...uploadedFiles]
+        };
+        
+        setConversations(prev => [newConversation, ...prev]);
+      }, [messages, uploadedFiles]);
+
+      const loadConversation = useCallback((conversation) => {
+        setMessages(conversation.messages);
+        setUploadedFiles(conversation.files);
+        setShowConversationsModal(false);
+      }, []);
+
+      const deleteConversation = useCallback((id) => {
+        setConversations(prev => prev.filter(c => c.id !== id));
+      }, []);
+
+      const handleDeleteChat = useCallback(() => {
+        if (messages.length > 0 && window.confirm("Are you sure you want to delete the chat history?")) {
+          setMessages([]);
+          setUploadedFiles([]);
+        }
+      }, [messages.length]);
+
+      const handleSuggestionClick = useCallback((text) => {
+        setInputValue(text);
+      }, []);
+
+      if (initError) {
+        return (
+          <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-900">
+            <div className="text-center p-8 max-w-md">
+              <h2 className="text-2xl font-bold text-red-500 mb-4">Initialization Error</h2>
+              <p className="text-gray-700 dark:text-gray-300 mb-6">{initError}</p>
+              <button
+                onClick={() => setShowApiKeyModal(true)}
+                className="px-6 py-2 bg-brand-pink text-white rounded-full font-medium hover:opacity-90"
+              >
+                Enter API Key
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex flex-col h-screen max-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+          {messages.filter(m => m.sender === MessageSender.USER).length === 0 ? (
+            <Header onSuggestionClick={handleSuggestionClick} userName={userName} />
+          ) : (
+            <ChatView messages={messages} />
+          )}
+          
+          <TypingArea
+            onSendMessage={handleSendMessage}
+            isLoading={isLoading}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            onDeleteChat={handleDeleteChat}
+            onOpenUploadModal={() => setFileModalOpen(true)}
+            onOpenApiKeyModal={() => setShowApiKeyModal(true)}
+            onOpenConversationsModal={() => setShowConversationsModal(true)}
+            isApiConfigured={!!apiKey}
+            uploadedFilesCount={uploadedFiles.length}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+          />
+            
+          {showApiKeyModal && (
+            <ApiKeyModal
+              onSave={handleSaveApiKey}
+              onDelete={handleDeleteApiKey}
+              onClose={() => {
+                if (apiKey) {
+                  setShowApiKeyModal(false);
+                }
+              }}
+              currentKey={apiKey}
+            />
+          )}
+          
+          {isFileModalOpen && (
+            <FileUploadModal
+              uploadedFiles={uploadedFiles}
+              setUploadedFiles={setUploadedFiles}
+              onClose={() => setFileModalOpen(false)}
+            />
+          )}
+
+          {showConversationsModal && (
+            <ConversationsModal
+              conversations={conversations}
+              onSelectConversation={loadConversation}
+              onDeleteConversation={deleteConversation}
+              onClose={() => setShowConversationsModal(false)}
+            />
+          )}
+        </div>
+      );
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+    });
+
+    // Render the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    );
+  </script>
+</body>
+</html>
