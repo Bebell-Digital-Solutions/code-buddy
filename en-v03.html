@@ -189,41 +189,48 @@
     }
 
 /* Suggestion card hover effects */
-.suggestion-card-tooltip {
-  visibility: hidden;
-  width: 200px;
-  background-color: white;
-  color: #333;
-  text-align: center;
-  border-radius: 6px;
-  padding: 8px;
+/* Tooltip styling */
+.tooltip {
   position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
+  visibility: hidden;
   opacity: 0;
   transition: opacity 0.3s;
+  z-index: 50;
+  width: 200px;
+  background: white;
+  color: #333;
+  padding: 8px;
+  border-radius: 6px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.suggestion-card-tooltip::after {
+.dark .tooltip {
+  background: #374151;
+  color: #f3f4f6;
+}
+
+.tooltip::after {
   content: "";
   position: absolute;
   top: 100%;
   left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
+  margin-left: -8px;
+  border-width: 8px;
   border-style: solid;
   border-color: white transparent transparent transparent;
 }
 
-.suggestion-card:hover .suggestion-card-tooltip {
+.dark .tooltip::after {
+  border-color: #374151 transparent transparent transparent;
+}
+
+.group:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
-
-
 
 
 
