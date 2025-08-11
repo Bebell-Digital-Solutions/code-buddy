@@ -169,26 +169,36 @@
   
 
 /* Force line break after emoji */
-/* Suggestion Cards Grid Layout */
-.suggestions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+/* Suggestions Carousel Container */
+.suggestions-carousel {
+  display: flex;
   gap: 16px;
+  padding: 8px 0;
   margin-top: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Suggestion Card Container */
+/* Hide scrollbar but keep functionality */
+.suggestions-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Suggestion Card */
 .suggestion-card {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
   position: relative;
   cursor: pointer;
   padding: 20px;
-  height: 180px;
+  height: 200px;
   display: flex;
   flex-direction: column;
   border-radius: 12px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .dark .suggestion-card {
@@ -197,8 +207,8 @@
 }
 
 .suggestion-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Card Content */
@@ -225,8 +235,8 @@
   font-size: 13px;
   line-height: 1.4;
   color: #64748b;
-  margin-top: 8px;
-  padding-top: 8px;
+  margin-top: auto;
+  padding-top: 12px;
   border-top: 1px dashed #e2e8f0;
 }
 
@@ -235,19 +245,54 @@
   border-color: #334155;
 }
 
+.example-prefix {
+  font-weight: 600;
+  color: #DF1783;
+}
+
 /* Icon Container */
-.suggestion-icon {
+.suggestion-icon-container {
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, #DF1783 0%, #FD5D93 100%);
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 
+              inset 0 -2px 4px rgba(0,0,0,0.1);
   margin-left: auto;
-  margin-top: auto;
-  color: white;
+  margin-top: 12px;
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon-container {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 
+              inset 0 -2px 4px rgba(255,255,255,0.1);
+}
+
+.suggestion-card:hover .suggestion-icon-container {
+  background: linear-gradient(135deg, #DF1783 0%, #FD5D93 100%);
+  box-shadow: none;
+}
+
+.suggestion-icon {
   font-size: 18px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon {
+  background-image: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+}
+
+.suggestion-card:hover .suggestion-icon {
+  color: white;
+  background-image: none;
 }
     
   </style>
@@ -731,8 +776,8 @@ const Header = ({ onSuggestionClick, userName }) => {
           </p>
         </div>
         
-        {/* Suggestions Grid */}
-        <div className="suggestions-grid">
+        {/* Horizontal Scrollable Carousel */}
+        <div className="suggestions-carousel">
           {SUGGESTIONS.map((suggestion, index) => (
             <div 
               key={index}
@@ -743,12 +788,16 @@ const Header = ({ onSuggestionClick, userName }) => {
                 <p className="suggestion-text">
                   {suggestion.text}
                 </p>
+                
                 <p className="suggestion-example">
-                  <span className="font-semibold text-brand-pink">Example:</span> {suggestion.example.replace('e.g.,', '')}
+                  <span className="example-prefix">Example:</span> {suggestion.example.replace('e.g.,', '')}
                 </p>
-              </div>
-              <div className="suggestion-icon">
-                <span className="material-symbols-rounded">{suggestion.icon}</span>
+                
+                <div className="suggestion-icon-container">
+                  <span className="suggestion-icon material-symbols-rounded">
+                    {suggestion.icon}
+                  </span>
+                </div>
               </div>
             </div>
           ))}
@@ -757,7 +806,6 @@ const Header = ({ onSuggestionClick, userName }) => {
     </header>
   );
 };
-
 
 
 
