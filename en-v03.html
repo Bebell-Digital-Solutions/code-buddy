@@ -169,118 +169,85 @@
   
 
 /* Force line break after emoji */
+/* Suggestion Cards Grid Layout */
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
 /* Suggestion Card Container */
 .suggestion-card {
   position: relative;
   cursor: pointer;
-  padding: 1.5rem;
-  width: 14rem;
-  height: 14rem;
+  padding: 20px;
+  height: 180px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  border-radius: 1rem;
+  border-radius: 12px;
   background: #f8fafc;
-  transition: all 0.3s ease;
-  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
 }
 
 .dark .suggestion-card {
   background: #1e293b;
+  border-color: #334155;
 }
 
 .suggestion-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Main Text Content */
+/* Card Content */
 .suggestion-content {
-  position: relative;
-  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .suggestion-text {
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.4;
   font-weight: 500;
   color: #1e293b;
+  margin-bottom: 12px;
 }
 
 .dark .suggestion-text {
   color: #e2e8f0;
 }
 
-/* Example Text (shown on hover) */
+/* Example Text */
 .suggestion-example {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  right: 1.5rem;
-  opacity: 0;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: #4b5563;
-  transition: opacity 0.3s ease;
-  z-index: 3;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #64748b;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
 }
 
 .dark .suggestion-example {
-  color: #9ca3af;
+  color: #94a3b8;
+  border-color: #334155;
 }
 
-.suggestion-card:hover .suggestion-example {
-  opacity: 1;
-}
-
-/* Icon Container - Fixed to always stay visible */
-.suggestion-icon-wrapper {
-  position: relative;
-  width: 100%;
-  margin-top: auto;
-}
-
-.suggestion-icon-container {
-  width: 3rem;
-  height: 3rem;
+/* Icon Container */
+.suggestion-icon {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #f1f5f9;
-  transition: all 0.3s ease;
-  margin-left: auto;
-  z-index: 4; /* Higher than example text */
-}
-
-.dark .suggestion-icon-container {
-  background: #334155;
-}
-
-.suggestion-card:hover .suggestion-icon-container {
   background: linear-gradient(135deg, #DF1783 0%, #FD5D93 100%);
-  transform: scale(1.05);
-}
-
-.suggestion-icon {
-  font-size: 1.5rem;
-  color: #64748b;
-  transition: all 0.3s ease;
-}
-
-.dark .suggestion-icon {
-  color: #94a3b8;
-}
-
-.suggestion-card:hover .suggestion-icon {
+  margin-left: auto;
+  margin-top: auto;
   color: white;
-}
-
-/* Example text prefix styling */
-.example-prefix {
-  font-weight: 600;
-  color: #DF1783;
-  margin-right: 0.25rem;
+  font-size: 18px;
 }
     
   </style>
@@ -721,6 +688,12 @@ const ChatMessage = ({ message }) => {
   );
 };
 
+
+
+
+
+    
+
 // ChatView component
 const ChatView = ({ messages }) => {
   const chatEndRef = useRef(null);
@@ -739,35 +712,57 @@ const ChatView = ({ messages }) => {
   );
 };
 
+
+
+
+
+    
 // Header component
 const Header = ({ onSuggestionClick, userName }) => {
   return (
-    <header className={'flex-1 overflow-y-auto px-4 pt-16 pb-8 sm:pt-24 lg:pt-28'}>
+    <header className="px-6 pt-8 pb-6">
       <div className="max-w-4xl mx-auto">
         <div>
-          <h1 className="text-5xl sm:text-6xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-brand-pink to-purple-500">
-            {userName ? `Hello, ${userName}` : 'Hello, there'}
+          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+            Hello, {userName || 'there'}
           </h1>
-          <p className="text-4xl sm:text-5xl font-medium text-gray-400 dark:text-gray-500 mt-2">What are we working on today?</p>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mt-1">
+            What are we working on today?
+          </p>
         </div>
-        <div className="mt-16 sm:mt-24">
-          <div className="flex gap-5 pb-4 -mx-4 px-4 overflow-x-auto">
-            {SUGGESTIONS.map((s, i) => (
-              <SuggestionCard 
-                key={i} 
-                text={s.text} 
-                icon={s.icon}
-                example={s.example}
-                onClick={() => onSuggestionClick(s.text)} 
-              />
-            ))}
-          </div>
+        
+        {/* Suggestions Grid */}
+        <div className="suggestions-grid">
+          {SUGGESTIONS.map((suggestion, index) => (
+            <div 
+              key={index}
+              className="suggestion-card"
+              onClick={() => onSuggestionClick(suggestion.text)}
+            >
+              <div className="suggestion-content">
+                <p className="suggestion-text">
+                  {suggestion.text}
+                </p>
+                <p className="suggestion-example">
+                  <span className="font-semibold text-brand-pink">Example:</span> {suggestion.example.replace('e.g.,', '')}
+                </p>
+              </div>
+              <div className="suggestion-icon">
+                <span className="material-symbols-rounded">{suggestion.icon}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </header>
   );
 };
 
+
+
+
+
+    
 // FileUploadModal component
 const FileUploadModal = ({ uploadedFiles, setUploadedFiles, onClose }) => {
   const [error, setError] = useState(null);
