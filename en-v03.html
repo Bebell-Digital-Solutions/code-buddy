@@ -169,42 +169,54 @@
   
 
 /* Force line break after emoji */
-.suggestion-item br {
-  display: block;
-  content: "";
-  margin-top: 4px;
-} 
-
-.suggestion-card {
-  position: relative;
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
   padding: 1.25rem;
   flex-shrink: 0;
   width: 14rem;
   height: 14rem;
-  display: flex;
   flex-direction: column;
   justify-content: space-between;
   border-radius: 1rem;
   background-color: rgb(241 245 249);
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.suggestion-card:hover {
+.suggestion-item:hover {
   background-color: rgb(226 232 240);
   transform: translateY(-2px);
 }
 
-.dark .suggestion-card {
+.dark .suggestion-item {
   background-color: rgb(31 41 55);
 }
 
-.dark .suggestion-card:hover {
+.dark .suggestion-item:hover {
   background-color: rgb(55 65 81);
 }
 
+.suggestion-text {
+  margin: 0;
+  display: inline;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #1e293b;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.dark .suggestion-text {
+  color: #e2e8f0;
+}
+
 .suggestion-icon-container {
-  align-self: flex-end;
   width: 2.75rem;
   height: 2.75rem;
   display: flex;
@@ -214,6 +226,7 @@
   background: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
   box-shadow: inset 0 2px 4px rgba(255,255,255,0.7), inset 0 -2px 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
+  align-self: flex-end;
 }
 
 .dark .suggestion-icon-container {
@@ -221,11 +234,9 @@
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(255,255,255,0.1);
 }
 
-/* Update the icon container hover state */
-.suggestion-card:hover .suggestion-icon-container {
-  background: #df1783;
+.suggestion-item:hover .suggestion-icon-container {
+  background: #DF1783;
   box-shadow: none;
-  border: 2px solid #fff; /* Add pink border */
 }
 
 .suggestion-icon {
@@ -241,29 +252,17 @@
   background-image: linear-gradient(to bottom right, #e5e7eb, #9ca3af);
 }
 
-.suggestion-card:hover .suggestion-icon {
-  color: #DF1783; /* Change icon color to pink on hover */
+.suggestion-item:hover .suggestion-icon {
+  color: white;
   background-image: none;
-}
-
-.suggestion-text {
-  font-size: 1rem;
-  line-height: 1.5;
-  font-weight: 500;
-  color: #1e293b;
-  transition: all 0.3s ease;
-}
-
-.dark .suggestion-text {
-  color: #e2e8f0;
 }
 
 .suggestion-example {
   position: absolute;
-  top: 1.25rem; /* Match card padding */
-  left: 1.25rem; /* Match card padding */
-  right: 1.25rem; /* Match card padding */
-  bottom: 3.5rem; /* Leave space for icon */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: 1.25rem;
   display: flex;
   align-items: center;
@@ -280,10 +279,20 @@
   color: #9ca3af;
 }
 
-
-
-.suggestion-card:hover .suggestion-example {
+.suggestion-item:hover .suggestion-example {
   opacity: 1;
+}
+
+.emoji {
+  font-size: 1.2em;
+  margin-right: 4px;
+}
+
+/* Force line break after emoji */
+.suggestion-item br {
+  display: block;
+  content: "";
+  margin-top: 4px;
 }
     
   </style>
@@ -521,22 +530,29 @@ const IconButton = ({ onClick, icon, label, disabled = false, className = '' }) 
 const SuggestionCard = ({ text, icon, example, onClick }) => (
   <div 
     onClick={onClick} 
-    className="suggestion-card group relative"
+    className="suggestion-item group"
   >
+    <div className="w-full">
+      <h4 className="suggestion-text">
+        {text.split(' ').map((word, i) => (
+          word.startsWith('[') ? (
+            <span key={i} className="text-brand-pink">{word}</span>
+          ) : (
+            <span key={i}>{word}</span>
+          )
+        )).reduce((prev, curr) => [prev, ' ', curr])}
+      </h4>
+    </div>
     
-    <h4 className="suggestion-text text-base font-medium">{text}</h4>
-    <p className="suggestion-example opacity-0 group-hover:opacity-100">{example}</p>
-   
+    <p className="suggestion-example">{example}</p>
     
-   {/* Icon container (always visible) */}
-    <div className="suggestion-icon-container absolute bottom-4 right-4">
+    <div className="suggestion-icon-container">
       <span className="suggestion-icon material-symbols-rounded">
         {icon}
       </span>
     </div>
   </div>
 );
-
 
 
     
