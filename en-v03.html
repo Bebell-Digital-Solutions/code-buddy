@@ -189,12 +189,17 @@
     }
 
 /* Suggestion card hover effects */
-/* Suggestion card tooltip */
-.suggestion-card-container {
+/* Suggestion Card Tooltips */
+.suggestion-card {
   position: relative;
 }
 
-.suggestion-card-tooltip {
+.suggestion-card:hover .suggestion-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.suggestion-tooltip {
   position: absolute;
   bottom: calc(100% + 10px);
   left: 50%;
@@ -206,18 +211,18 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 100;
-  opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  opacity: 0;
+  transition: all 0.2s ease;
 }
 
-.dark .suggestion-card-tooltip {
+.dark .suggestion-tooltip {
   background: #374151;
   color: #f3f4f6;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
-.suggestion-card-tooltip::after {
+.suggestion-tooltip::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -228,15 +233,9 @@
   border-color: white transparent transparent transparent;
 }
 
-.dark .suggestion-card-tooltip::after {
+.dark .suggestion-tooltip::after {
   border-color: #374151 transparent transparent transparent;
 }
-
-.suggestion-card-container:hover .suggestion-card-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
     
   </style>
 </head>
@@ -468,27 +467,31 @@ const IconButton = ({ onClick, icon, label, disabled = false, className = '' }) 
   </button>
 );
 
-// Updated SuggestionCard with hover examples
+
+    
 const SuggestionCard = ({ text, icon, example, onClick }) => (
   <div 
     onClick={onClick} 
-    className="suggestion-card-container relative cursor-pointer p-5 flex-shrink-0 w-56 h-56 flex flex-col justify-between rounded-2xl bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors duration-200"
+    className="suggestion-card relative cursor-pointer p-5 flex-shrink-0 w-56 h-56 flex flex-col justify-between rounded-2xl bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors duration-200"
   >
     <h4 className="text-base font-medium text-gray-800 dark:text-gray-200">{text}</h4>
-    <div className="self-end w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 shadow-[inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px_rgba(0,0,0,0.1)] dark:bg-gradient-to-br dark:from-gray-600 dark:via-gray-700 dark:to-gray-800 dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3),inset_0_-2px_4px_rgba(255,255,255,0.1)] transition-all duration-300 group-hover:bg-gradient-to-tr group-hover:from-[#df1783] group-hover:to-[#fd5d93] group-hover:shadow-none">
-      <span className="material-symbols-rounded text-2xl text-transparent bg-clip-text bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-200 dark:to-gray-400 group-hover:text-white group-hover:bg-none">
+    <div className="self-end w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 shadow-[inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px rgba(0,0,0,0.1)] dark:bg-gradient-to-br dark:from-gray-600 dark:via-gray-700 dark:to-gray-800 dark:shadow-[inset_0_2px_4px rgba(0,0,0,0.3),inset_0_-2px_4px rgba(255,255,255,0.1)] transition-all duration-300 hover:bg-gradient-to-tr hover:from-[#DF1783] hover:to-[#fd5d93] hover:shadow-none">
+      <span className="material-symbols-rounded text-2xl text-transparent bg-clip-text bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-200 dark:to-gray-400 hover:text-[#DF1783]">
         {icon}
       </span>
     </div>
     
     {/* Example tooltip */}
-    <div className="suggestion-card-tooltip">
+    <div className="suggestion-tooltip">
       <p className="text-sm">{example}</p>
     </div>
   </div>
 );
 
 
+
+
+    
     
 // Updated ApiKeyModal with name field
 const ApiKeyModal = ({ onSave, onDelete, onClose, currentKey }) => {
