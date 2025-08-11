@@ -479,13 +479,15 @@ const SuggestionCard = ({ text, icon, example, onClick }) => (
     </div>
     
     {/* Example tooltip */}
-    <div className="absolute bottom-full left-0 right-0 mb-2 p-3 bg-white dark:bg-gray-700 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
-      <p className="text-sm text-gray-600 dark:text-gray-300">{example}</p>
-      <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white dark:border-b-gray-700"></div>
+    <div className="absolute hidden group-hover:block bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm p-3 rounded-lg shadow-lg z-50">
+      <p>{example}</p>
+      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white dark:border-b-gray-700"></div>
     </div>
   </div>
 );
 
+
+    
 // Updated ApiKeyModal with name field
 const ApiKeyModal = ({ onSave, onDelete, onClose, currentKey }) => {
   const [key, setKey] = useState(currentKey || '');
