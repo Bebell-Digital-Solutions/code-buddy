@@ -274,34 +274,85 @@ const gfmPlugin =
       BOT: 'bot',
     };
 
-  const SUGGESTIONS = [
-  // Original suggestions
-  { text: "🎯 Write a simple 'Hello World' program in Python and explain each line.", icon: "code" },
-  { text: "🎯 How do I create a basic HTML page with title, heading and paragraph?", icon: "html" },
-  { text: "🎯 Show me how to style text using CSS with examples.", icon: "palette" },
-  { text: "🎯 Explain how variables and data types work in JavaScript.", icon: "javascript" },
-  { text: "🎯 Create a basic calculator in Python that can add, subtract, multiply and divide.", icon: "calculate" },
-  { text: "🎯 How can I make a button in HTML that changes color when clicked?", icon: "touch_app" },
-  { text: "🎯 Explain what a loop is in programming and give me 3 examples.", icon: "repeat" },
-  { text: "🎯 Show me how to connect HTML, CSS and JavaScript together in one project.", icon: "integration_instructions" },
- { text: "🚀 Create a responsive navigation bar with dropdown menus using HTML/CSS", icon: "menu" },
-  { text: "🚀 Build a contact form with validation using HTML, CSS and JavaScript", icon: "contact_mail" },
-  { text: "🚀 Make an image carousel/slider with navigation buttons", icon: "slideshow" },
-  { text: "🚀 Create a modal/popup window that appears on button click", icon: "open_in_new" },
-  { text: "🚀 Build an accordion FAQ component that expands/collapses", icon: "expand_more" },
-    { text: "🔥 Create a simple 2-theme calculator (light/dark) with HTML/CSS/JS", icon: "calculate" },
-  { text: "🔥 Build a landing page for a coffee shop with hero section and menu preview", icon: "local_cafe" },
-  { text: "🔥 Make a todo list app that lets you add, complete and delete tasks", icon: "checklist" },
-  { text: "🔥 Create a countdown timer with start/pause/reset functionality", icon: "timer" },
-  { text: "🔥 Build a weather app interface that shows current weather and forecast", icon: "cloud" },
-  { text: "🔥 Make a simple memory card matching game with 8 pairs of cards", icon: "memory" },
-  { text: "🔥 Create a BMI calculator with input fields for height and weight", icon: "monitor_weight" },
-  { text: "🔥 Build a product card component with image, description and add-to-cart button", icon: "shopping_cart" },
-  { text: "💻 Show me how to create a personal portfolio website from scratch", icon: "person" },
-  { text: "💻 Build a restaurant menu page with category filters", icon: "restaurant" },
-  { text: "💻 Create a simple blog layout with featured posts and sidebar", icon: "article" },
-  { text: "💻 Make a pricing table component with 3 different plan options", icon: "paid" },
-  { text: "💻 Build a login/signup form with toggle between forms", icon: "login" },
+const SUGGESTIONS = [
+  // Core Programming
+  { 
+    text: "🎯 Write a [language] program that [function] with [specific requirement]", 
+    icon: "code",
+    example: "e.g., 'Write a Python program that calculates factorial with recursive function'"
+  },
+  
+  // HTML/CSS Components
+  { 
+    text: "🚀 Create a [component] with background: [color/hex] and [specific style attribute: value]", 
+    icon: "palette",
+    example: "e.g., 'Create a button with background: #4CAF50 and hover effect: scale(1.05)'"
+  },
+  { 
+    text: "🚀 Build a [type] navigation bar with [color: hex] and [height: px] for [device type]", 
+    icon: "menu",
+    example: "e.g., 'Build a sticky navigation bar with #2c3e50 and 80px height for mobile'"
+  },
+
+  // Interactive Elements
+  { 
+    text: "🔮 Make a [element] that [action] when [event] with [color/style: value]", 
+    icon: "touch_app",
+    example: "e.g., 'Make a div that rotates 45deg when clicked with border: 2px dashed #e74c3c'"
+  },
+  { 
+    text: "🔮 Create [number] [type] cards with [width x height] and [animation: type]", 
+    icon: "dashboard",
+    example: "e.g., 'Create 6 product cards with 300x200px and animation: fade-in'"
+  },
+
+  // Mini Applications
+  { 
+    text: "📱 Build a [app type] with [feature 1] and [feature 2] using [framework: yes/no]", 
+    icon: "apps",
+    example: "e.g., 'Build a weather app with 5-day forecast and location detection using React: yes'"
+  },
+  { 
+    text: "📱 Create [theme 1]/[theme 2] [app type] with [primary color] and [font: name]", 
+    icon: "contrast",
+    example: "e.g., 'Create light/dark calculator with #3498db and font: Roboto'"
+  },
+
+  // Page Templates
+  { 
+    text: "🌐 Design a [page type] for [industry] using [color palette] and [layout type]", 
+    icon: "web",
+    example: "e.g., 'Design a landing page for bakery using pastel colors and grid layout'"
+  },
+  { 
+    text: "🌐 Make [type] form with [field count] fields and [validation type] in [color scheme]", 
+    icon: "form",
+    example: "e.g., 'Make registration form with 5 fields and real-time validation in blue/white'"
+  },
+
+  // Games & Tools
+  { 
+    text: "🎮 Create [game type] with [difficulty] level and [theme color] UI", 
+    icon: "sports_esports",
+    example: "e.g., 'Create memory game with medium difficulty and space-themed UI'"
+  },
+  { 
+    text: "🛠️ Build [tool type] that outputs [format] with [customization option]", 
+    icon: "build",
+    example: "e.g., 'Build gradient generator that outputs CSS with angle picker'"
+  },
+
+  // Special Templates
+  { 
+    text: "✨ Generate [UI element] with [style] effect and [responsive behavior]", 
+    icon: "auto_awesome",
+    example: "e.g., 'Generate modal with glassmorphism effect and mobile-first behavior'"
+  },
+  { 
+    text: "✨ Make [type] loader with [animation duration] and [color sequence]", 
+    icon: "loop",
+    example: "e.g., 'Make progress bar loader with 2s duration and rainbow colors'"
+  }
 ];
 
     const MASTER_PROMPT = `
