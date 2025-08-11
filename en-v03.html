@@ -166,76 +166,31 @@
       background-color: #374151;
     }
     
-    .suggestion-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .emoji {
-      font-size: 1.2em;
-      margin-right: 4px;
-    }
-    
-    .suggestion-text {
-      margin: 0;
-      display: inline;
-    }
-    
-    .suggestion-item br {
-      display: block;
-      content: "";
-      margin-top: 4px;
-    }
-
-/* Suggestion card hover effects */
-/* Suggestion Card Tooltips */
-.suggestion-card {
-  position: relative;
+  
+ .suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
 }
 
-.suggestion-card:hover .suggestion-tooltip {
-  visibility: visible;
-  opacity: 1;
+.emoji {
+  font-size: 1.2em;
+  margin-right: 4px;
 }
 
-.suggestion-tooltip {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  background: white;
-  color: #333;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 100;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.2s ease;
+.suggestion-text {
+  margin: 0;
+  display: inline; /* Ensure text flows naturally */
 }
 
-.dark .suggestion-tooltip {
-  background: #374151;
-  color: #f3f4f6;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-
-.suggestion-tooltip::after {
+/* Force line break after emoji */
+.suggestion-item br {
+  display: block;
   content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 8px;
-  border-style: solid;
-  border-color: white transparent transparent transparent;
-}
+  margin-top: 4px;
+} 
 
-.dark .suggestion-tooltip::after {
-  border-color: #374151 transparent transparent transparent;
-}
+
     
   </style>
 </head>
