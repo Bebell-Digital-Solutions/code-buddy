@@ -167,21 +167,6 @@
     }
     
   
- .suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Space between icon and text */
-}
-
-.emoji {
-  font-size: 1.2em;
-  margin-right: 4px;
-}
-
-.suggestion-text {
-  margin: 0;
-  display: inline; /* Ensure text flows naturally */
-}
 
 /* Force line break after emoji */
 .suggestion-item br {
@@ -190,7 +175,116 @@
   margin-top: 4px;
 } 
 
+.suggestion-card {
+  position: relative;
+  cursor: pointer;
+  padding: 1.25rem;
+  flex-shrink: 0;
+  width: 14rem;
+  height: 14rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 1rem;
+  background-color: rgb(241 245 249);
+  transition: all 0.3s ease;
+}
 
+.suggestion-card:hover {
+  background-color: rgb(226 232 240);
+  transform: translateY(-2px);
+}
+
+.dark .suggestion-card {
+  background-color: rgb(31 41 55);
+}
+
+.dark .suggestion-card:hover {
+  background-color: rgb(55 65 81);
+}
+
+.suggestion-icon-container {
+  align-self: flex-end;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.7), inset 0 -2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon-container {
+  background: linear-gradient(to bottom right, #4b5563, #374151);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(255,255,255,0.1);
+}
+
+.suggestion-card:hover .suggestion-icon-container {
+  background: #DF1783;
+  box-shadow: none;
+}
+
+.suggestion-icon {
+  font-size: 1.5rem;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to bottom right, #4b5563, #1f2937);
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon {
+  background-image: linear-gradient(to bottom right, #e5e7eb, #9ca3af);
+}
+
+.suggestion-card:hover .suggestion-icon {
+  color: white;
+  background-image: none;
+}
+
+.suggestion-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #1e293b;
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-text {
+  color: #e2e8f0;
+}
+
+.suggestion-example {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  background-color: inherit;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #4b5563;
+}
+
+.dark .suggestion-example {
+  color: #9ca3af;
+}
+
+.suggestion-card:hover .suggestion-text {
+  opacity: 0;
+}
+
+.suggestion-card:hover .suggestion-example {
+  opacity: 1;
+}
     
   </style>
 </head>
@@ -427,22 +521,17 @@ const IconButton = ({ onClick, icon, label, disabled = false, className = '' }) 
 const SuggestionCard = ({ text, icon, example, onClick }) => (
   <div 
     onClick={onClick} 
-    className="suggestion-card relative cursor-pointer p-5 flex-shrink-0 w-56 h-56 flex flex-col justify-between rounded-2xl bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors duration-200"
+    className="suggestion-card group"
   >
-    <h4 className="text-base font-medium text-gray-800 dark:text-gray-200">{text}</h4>
-    <div className="self-end w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 shadow-[inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px_rgba(0,0,0,0.1)] dark:bg-gradient-to-br dark:from-gray-600 dark:via-gray-700 dark:to-gray-800 dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3),inset_0_-2px_4px_rgba(255,255,255,0.1)] transition-all duration-300 group-hover:bg-gradient-to-tr group-hover:from-[#df1783] group-hover:to-[#fd5d93] group-hover:shadow-none">
-          <span className="material-symbols-rounded text-2xl text-transparent bg-clip-text bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-200 dark:to-gray-400 group-hover:text-white group-hover:bg-none">
-            {icon}
-          </span>
-    </div>
-    
-    {/* Example tooltip */}
-    <div className="suggestion-tooltip">
-      <p className="text-sm">{example}</p>
+    <h4 className="suggestion-text text-base font-medium">{text}</h4>
+    <p className="suggestion-example">{example}</p>
+    <div className="suggestion-icon-container">
+      <span className="suggestion-icon material-symbols-rounded">
+        {icon}
+      </span>
     </div>
   </div>
 );
-
 
 
 
