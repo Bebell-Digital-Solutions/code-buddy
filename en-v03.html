@@ -169,130 +169,113 @@
   
 
 /* Force line break after emoji */
-.suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Suggestion Card Container */
+.suggestion-card {
+  position: relative;
   cursor: pointer;
-  padding: 1.25rem;
-  flex-shrink: 0;
+  padding: 1.5rem;
   width: 14rem;
   height: 14rem;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   border-radius: 1rem;
-  background-color: rgb(241 245 249);
+  background: #f8fafc;
   transition: all 0.3s ease;
-  position: relative;
   overflow: hidden;
 }
 
-.suggestion-item:hover {
-  background-color: rgb(226 232 240);
-  transform: translateY(-2px);
+.dark .suggestion-card {
+  background: #1e293b;
 }
 
-.dark .suggestion-item {
-  background-color: rgb(31 41 55);
+.suggestion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-.dark .suggestion-item:hover {
-  background-color: rgb(55 65 81);
+/* Main Text Content */
+.suggestion-content {
+  position: relative;
+  z-index: 2;
 }
 
 .suggestion-text {
-  margin: 0;
-  display: inline;
   font-size: 1rem;
   line-height: 1.5;
   font-weight: 500;
   color: #1e293b;
   transition: all 0.3s ease;
-  width: 100%;
-  text-align: left;
 }
 
 .dark .suggestion-text {
   color: #e2e8f0;
 }
 
-.suggestion-icon-container {
-  width: 2.75rem;
-  height: 2.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: linear-gradient(to bottom right, #e2e8f0, #cbd5e1);
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.7), inset 0 -2px 4px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  align-self: flex-end;
-}
-
-.dark .suggestion-icon-container {
-  background: linear-gradient(to bottom right, #4b5563, #374151);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(255,255,255,0.1);
-}
-
-.suggestion-item:hover .suggestion-icon-container {
-  background: #DF1783;
-  box-shadow: none;
-}
-
-.suggestion-icon {
-  font-size: 1.5rem;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-image: linear-gradient(to bottom right, #4b5563, #1f2937);
-  transition: all 0.3s ease;
-}
-
-.dark .suggestion-icon {
-  background-image: linear-gradient(to bottom right, #e5e7eb, #9ca3af);
-}
-
-.suggestion-item:hover .suggestion-icon {
-  color: white;
-  background-image: none;
-}
-
+/* Example Text (shown on hover) */
 .suggestion-example {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1.25rem;
-  display: flex;
-  align-items: center;
-  background-color: inherit;
-  border-radius: inherit;
+  top: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 4rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
   font-size: 0.875rem;
   line-height: 1.5;
   color: #4b5563;
+  transition: all 0.3s ease;
+  z-index: 3;
 }
 
 .dark .suggestion-example {
   color: #9ca3af;
 }
 
-.suggestion-item:hover .suggestion-example {
+.suggestion-card:hover .suggestion-example {
   opacity: 1;
 }
 
-.emoji {
-  font-size: 1.2em;
-  margin-right: 4px;
+/* Icon Container */
+.suggestion-icon-container {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  transition: all 0.3s ease;
+  align-self: flex-end;
+  z-index: 2;
 }
 
-/* Force line break after emoji */
-.suggestion-item br {
-  display: block;
-  content: "";
-  margin-top: 4px;
+.dark .suggestion-icon-container {
+  background: #334155;
+}
+
+.suggestion-card:hover .suggestion-icon-container {
+  background: linear-gradient(135deg, #DF1783 0%, #FD5D93 100%);
+}
+
+.suggestion-icon {
+  font-size: 1.5rem;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon {
+  color: #94a3b8;
+}
+
+.suggestion-card:hover .suggestion-icon {
+  color: white;
+}
+
+/* Example text prefix styling */
+.example-prefix {
+  font-weight: 600;
+  color: #DF1783;
+  margin-right: 0.25rem;
 }
     
   </style>
@@ -530,22 +513,28 @@ const IconButton = ({ onClick, icon, label, disabled = false, className = '' }) 
 const SuggestionCard = ({ text, icon, example, onClick }) => (
   <div 
     onClick={onClick} 
-    className="suggestion-item group"
+    className="suggestion-card group"
   >
-    <div className="w-full">
-      <h4 className="suggestion-text">
+    {/* Main Content */}
+    <div className="suggestion-content">
+      <p className="suggestion-text">
         {text.split(' ').map((word, i) => (
           word.startsWith('[') ? (
             <span key={i} className="text-brand-pink">{word}</span>
           ) : (
             <span key={i}>{word}</span>
           )
-        )).reduce((prev, curr) => [prev, ' ', curr])}
-      </h4>
+        ))}
+      </p>
+      
+      {/* Example Text (shown on hover) */}
+      <div className="suggestion-example">
+        <span className="example-prefix">Example:</span>
+        {example.replace('e.g.,', '')}
+      </div>
     </div>
     
-    <p className="suggestion-example">{example}</p>
-    
+    {/* Icon (always visible) */}
     <div className="suggestion-icon-container">
       <span className="suggestion-icon material-symbols-rounded">
         {icon}
@@ -553,7 +542,6 @@ const SuggestionCard = ({ text, icon, example, onClick }) => (
     </div>
   </div>
 );
-
 
     
     
