@@ -475,10 +475,10 @@ const SuggestionCard = ({ text, icon, example, onClick }) => (
     className="suggestion-card relative cursor-pointer p-5 flex-shrink-0 w-56 h-56 flex flex-col justify-between rounded-2xl bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors duration-200"
   >
     <h4 className="text-base font-medium text-gray-800 dark:text-gray-200">{text}</h4>
-    <div className="self-end w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 shadow-[inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px rgba(0,0,0,0.1)] dark:bg-gradient-to-br dark:from-gray-600 dark:via-gray-700 dark:to-gray-800 dark:shadow-[inset_0_2px_4px rgba(0,0,0,0.3),inset_0_-2px_4px rgba(255,255,255,0.1)] transition-all duration-300 hover:bg-gradient-to-tr hover:from-[#DF1783] hover:to-[#fd5d93] hover:shadow-none">
-      <span className="material-symbols-rounded text-2xl text-transparent bg-clip-text bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-200 dark:to-gray-400 hover:text-[#DF1783]">
-        {icon}
-      </span>
+    <div className="self-end w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-br from-gray-300 via-gray-200 to-gray-400 shadow-[inset_0_2px_4px_rgba(255,255,255,0.7),inset_0_-2px_4px_rgba(0,0,0,0.1)] dark:bg-gradient-to-br dark:from-gray-600 dark:via-gray-700 dark:to-gray-800 dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3),inset_0_-2px_4px_rgba(255,255,255,0.1)] transition-all duration-300 group-hover:bg-gradient-to-tr group-hover:from-[#df1783] group-hover:to-[#fd5d93] group-hover:shadow-none">
+          <span className="material-symbols-rounded text-2xl text-transparent bg-clip-text bg-gradient-to-br from-gray-600 to-gray-800 dark:from-gray-200 dark:to-gray-400 group-hover:text-white group-hover:bg-none">
+            {icon}
+          </span>
     </div>
     
     {/* Example tooltip */}
