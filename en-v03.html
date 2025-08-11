@@ -761,52 +761,50 @@ const ChatView = ({ messages }) => {
 
 
 
-    
-// Header component
+  // Header component
 const Header = ({ onSuggestionClick, userName }) => {
   return (
-    <header className="px-6 pt-8 pb-6">
+    <header className={'flex-1 overflow-y-auto px-4 pt-16 pb-8 sm:pt-24 lg:pt-28'}>
       <div className="max-w-4xl mx-auto">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
-            Hello, {userName || 'there'}
+          <h1 className="text-5xl sm:text-6xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-brand-pink to-purple-500">
+            {userName ? `Hello, ${userName}` : 'Hello, there'}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mt-1">
-            What are we working on today?
-          </p>
+          <p className="text-4xl sm:text-5xl font-medium text-gray-400 dark:text-gray-500 mt-2">How can I help you today?</p>
         </div>
-        
-        {/* Horizontal Scrollable Carousel */}
-        <div className="suggestions-carousel">
-          {SUGGESTIONS.map((suggestion, index) => (
-            <div 
-              key={index}
-              className="suggestion-card"
-              onClick={() => onSuggestionClick(suggestion.text)}
-            >
-              <div className="suggestion-content">
-                <p className="suggestion-text">
-                  {suggestion.text}
-                </p>
-                
-                <p className="suggestion-example">
-                  <span className="example-prefix">Example:</span> {suggestion.example.replace('e.g.,', '')}
-                </p>
-                
-                <div className="suggestion-icon-container">
-                  <span className="suggestion-icon material-symbols-rounded">
-                    {suggestion.icon}
-                  </span>
+
+        <div className="mt-16 sm:mt-24">        
+          {/* Horizontal Scrollable Carousel */}
+          <div className="flex gap-5 pb-4 -mx-4 px-4 overflow-x-auto">
+            {SUGGESTIONS.map((suggestion, index) => (
+              <div 
+                key={index}
+                className="suggestion-card flex-shrink-0" // Added flex-shrink-0 to prevent cards from shrinking
+                onClick={() => onSuggestionClick(suggestion.text)}
+              >
+                <div className="suggestion-content">
+                  <p className="suggestion-text">
+                    {suggestion.text}
+                  </p>
+                  
+                  <p className="suggestion-example">
+                    <span className="example-prefix">Example:</span> {suggestion.example.replace('e.g.,', '')}
+                  </p>
+                  
+                  <div className="suggestion-icon-container">
+                    <span className="suggestion-icon material-symbols-rounded">
+                      {suggestion.icon}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </header>
   );
 };
-
 
 
 
