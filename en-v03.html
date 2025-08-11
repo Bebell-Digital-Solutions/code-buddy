@@ -205,7 +205,6 @@
   line-height: 1.5;
   font-weight: 500;
   color: #1e293b;
-  transition: all 0.3s ease;
 }
 
 .dark .suggestion-text {
@@ -218,12 +217,11 @@
   top: 1.5rem;
   left: 1.5rem;
   right: 1.5rem;
-  bottom: 4rem;
   opacity: 0;
   font-size: 0.875rem;
   line-height: 1.5;
   color: #4b5563;
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
   z-index: 3;
 }
 
@@ -235,18 +233,24 @@
   opacity: 1;
 }
 
-/* Icon Container */
+/* Icon Container - Fixed to always stay visible */
+.suggestion-icon-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+}
+
 .suggestion-icon-container {
   width: 3rem;
   height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
+  border-radius: 50%;
   background: #f1f5f9;
   transition: all 0.3s ease;
-  align-self: flex-end;
-  z-index: 2;
+  margin-left: auto;
+  z-index: 4; /* Higher than example text */
 }
 
 .dark .suggestion-icon-container {
@@ -255,6 +259,7 @@
 
 .suggestion-card:hover .suggestion-icon-container {
   background: linear-gradient(135deg, #DF1783 0%, #FD5D93 100%);
+  transform: scale(1.05);
 }
 
 .suggestion-icon {
@@ -534,11 +539,13 @@ const SuggestionCard = ({ text, icon, example, onClick }) => (
       </div>
     </div>
     
-    {/* Icon (always visible) */}
-    <div className="suggestion-icon-container">
-      <span className="suggestion-icon material-symbols-rounded">
-        {icon}
-      </span>
+    {/* Icon Container - Fixed position */}
+    <div className="suggestion-icon-wrapper">
+      <div className="suggestion-icon-container">
+        <span className="suggestion-icon material-symbols-rounded">
+          {icon}
+        </span>
+      </div>
     </div>
   </div>
 );
