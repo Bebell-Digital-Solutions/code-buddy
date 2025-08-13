@@ -110,6 +110,8 @@
     .markdown-content p {
       margin-bottom: 1.25em;
     }
+
+    
     
     .markdown-content pre {
         position: relative;
@@ -214,6 +216,34 @@
     }
 
 
+.markdown-content ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 1em 0;
+}
+
+.markdown-content ul li {
+  position: relative;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.markdown-content ul li:before {
+  content: "•";
+  color: #DF1783;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.markdown-content strong {
+  font-weight: 600;
+  color: inherit;
+}
+
+.markdown-content em {
+  font-style: italic;
+}
 
     
 
@@ -487,14 +517,17 @@ Only proceed with a complete solution when you're confident you understand all r
 
 CRITICAL FORMATTING RULES:
 - ALWAYS use explicit markdown formatting:
+   [NEWLINE]- [SPACE]Item 1[NEWLINE]- [SPACE]Item 2
   - For bullet points: \n- Item 1\n- Item 2
   - For bold: **bold text**
   - For italics: *italic text*
   - For code: \`single line\` or \`\`\`multiline\`\`\`
   - For sections: ## Heading
 - Put ALL bullet points on new lines
+- For line breaks: TWO NEWLINES between paragraphs
 - Use TWO newlines between paragraphs
 - NEVER combine markdown with plain text formatting
+- Emojis should be on their own line when used as bullets
 `;
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
@@ -802,10 +835,17 @@ const ChatMessage = ({ message }) => {
   // Emphasis/italic text
   em: ({node, ...props}) => <em className="italic" {...props} />
 
-  p: ({node, ...props}) => <p className="my-4 leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap" {...props} />,
-  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />,
-  strong: ({node, ...props}) => <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />,
-  em: ({node, ...props}) => <em className="italic text-gray-700 dark:text-gray-300" {...props} />,
+// Force paragraphs to respect whitespace
+  p: ({node, ...props}) => <p className="my-3 whitespace-pre-wrap" {...props} />,
+  
+  // Custom list handling
+  ul: ({node, ...props}) => <ul className="markdown-list" {...props} />,
+  li: ({node, ...props}) => <li className="markdown-list-item" {...props} />,
+  
+  // Bold/italic handling
+  strong: ({node, ...props}) => <strong className="font-semibold" {...props} />,
+  em: ({node, ...props}) => <em className="italic" {...props} />,
+              
 }}
               >
                 {message.text}
