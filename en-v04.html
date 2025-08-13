@@ -89,6 +89,8 @@
     
     .markdown-content {
       line-height: 1.75;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
 
@@ -96,6 +98,13 @@
   margin-top: 1.25rem;
 }
 
+
+/* Force line breaks after specific elements */
+.markdown-content br {
+  display: block;
+  content: "";
+  margin-bottom: 0.75em;
+}
 
     
     .markdown-content p {
@@ -155,6 +164,7 @@
       color: inherit;
     }
     
+    
 /* Make lists more compact but readable */
 .markdown-content ul,
 .markdown-content ol {
@@ -203,20 +213,6 @@
       background-color: #374151;
     }
 
-
-    
-  /* Add to your styles */
-.markdown-content {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-/* Force line breaks after specific elements */
-.markdown-content br {
-  display: block;
-  content: "";
-  margin-bottom: 0.75em;
-}
 
 
     
