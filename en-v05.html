@@ -385,6 +385,114 @@
   color: white;
   background-image: none;
 }
+
+
+
+/* URL Preview Styles */
+.url-preview {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+  max-width: 500px;
+  transition: all 0.2s ease;
+}
+
+.url-preview:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.social-preview {
+  border-left: 3px solid #DF1783;
+}
+
+.preview-link {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+}
+
+.preview-image-container {
+  width: 120px;
+  min-height: 120px;
+  background: #f8fafc;
+  position: relative;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-content {
+  padding: 12px;
+  flex: 1;
+}
+
+.preview-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #1e293b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.preview-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.preview-domain {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Dark Mode */
+.dark .url-preview {
+  border-color: #334155;
+  background: #1e293b;
+}
+
+.dark .preview-title {
+  color: #f1f5f9;
+}
+
+.dark .preview-description {
+  color: #94a3b8;
+}
+
+.dark .preview-image-container {
+  background: #0f172a;
+}
+
+/* Loading State */
+.url-preview-loading {
+  margin: 1rem 0;
+  max-width: 500px;
+}
+
+.loading-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+}
+
+
+
+
+  
     
   </style>
 </head>
@@ -753,12 +861,24 @@ const ApiKeyModal = ({ onSave, onDelete, onClose, currentKey }) => {
   );
 };
 
+
+    
+
 // ChatMessage component
+import UrlPreview from './UrlPreview';
+    
 const ChatMessage = ({ message }) => {
   const [copyIcon, setCopyIcon] = useState('content_copy');
   const isBot = message.sender === MessageSender.BOT;
   const isLoading = isBot && message.text === '' && !message.isError;
   const userName = localStorage.getItem('user-name') || 'You';
+
+  // Enhanced URL detection
+  const detectUrls = (text) => {
+    const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+    const urls = text.match(urlRegex) || [];
+    return [...new Set(urls)]; // Remove duplicates
+  };
 
   const handleCopy = () => {
     if (message.text) {
@@ -768,6 +888,7 @@ const ChatMessage = ({ message }) => {
     }
   };
 
+  const urls = detectUrls(message.text);
   const messageContentClass = message.isError ? 'text-red-500' : 'text-gray-800 dark:text-gray-200';
 
   return (
@@ -784,86 +905,95 @@ const ChatMessage = ({ message }) => {
           </div>
           
           {(isBot && isLoading) ? <LoadingIndicator /> : (
-            <div className={`markdown-content ${messageContentClass}`}>
-              <ReactMarkdown 
-                remarkPlugins={gfmPlugin ? [gfmPlugin] : []}
-            
-                
-               
-                components={{
-  // Headings
-  h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-3 text-brand-pink" {...props} />,
-  h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-800 dark:text-gray-200" {...props} />,
-  h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-700 dark:text-gray-300" {...props} />,
-  
-  // Paragraphs - single definition
-  p: ({node, ...props}) => (
-    <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap" {...props} />
-  ),
-  
-  // Lists - single consistent definition
-  ul: ({node, ...props}) => (
-    <ul className="markdown-list list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />
-  ),
-  ol: ({node, ...props}) => (
-    <ol className="markdown-list list-decimal pl-5 space-y-2 my-4 marker:text-brand-pink marker:font-medium" {...props} />
-  ),
-  li: ({node, ...props}) => (
-    <li className="markdown-list-item pl-2 mb-1 text-gray-700 dark:text-gray-300" {...props} />
-  ),
-  
-  // Code blocks
-  pre: ({node, ...props}) => (
-    <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-4 text-sm border-l-4 border-brand-pink" {...props} />
-  ),
-  code: ({node, inline, ...props}) => inline ? (
-    <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600 dark:text-pink-400" {...props} />
-  ) : (
-    <pre className="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm font-mono my-4" {...props} />
-  ),
-  
-  // Blockquotes
-  blockquote: ({node, ...props}) => (
-    <blockquote className="border-l-3 border-gray-300 dark:border-gray-600 pl-4 text-gray-600 dark:text-gray-400 my-4 py-1" {...props} />
-  ),
-  
-  // Tables
-  table: ({node, ...props}) => (
-    <div className="overflow-x-auto my-4 rounded-lg border border-gray-200 dark:border-gray-700">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700" {...props} />
-    </div>
-  ),
-  th: ({node, ...props}) => (
-    <th className="px-4 py-3 bg-gray-50 dark:bg-gray-800 text-left text-sm font-medium text-gray-700 dark:text-gray-300" {...props} />
-  ),
-  td: ({node, ...props}) => (
-    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700" {...props} />
-  ),
-  
-  // Links
-  a: ({node, ...props}) => (
-    <a className="text-brand-pink hover:underline font-medium" target="_blank" rel="noopener noreferrer" {...props} />
-  ),
-  
-  // Horizontal rule
-  hr: ({node, ...props}) => (
-    <hr className="my-6 border-gray-200 dark:border-gray-700" {...props} />
-  ),
-  
-  // Text formatting - single definitions
-  strong: ({node, ...props}) => (
-    <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />
-  ),
-  em: ({node, ...props}) => (
-    <em className="italic" {...props} />
-  )
-}}
-              >
-                {message.text}
-              </ReactMarkdown>
-            </div>
+            <>
+              <div className={`markdown-content ${messageContentClass}`}>
+                <ReactMarkdown 
+                  remarkPlugins={gfmPlugin ? [gfmPlugin] : []}
+                  components={{
+                    // Headings
+                    h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-3 text-brand-pink" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-800 dark:text-gray-200" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-700 dark:text-gray-300" {...props} />,
+                    
+                    // Paragraphs
+                    p: ({node, ...props}) => (
+                      <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap" {...props} />
+                    ),
+                    
+                    // Lists
+                    ul: ({node, ...props}) => (
+                      <ul className="markdown-list list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />
+                    ),
+                    ol: ({node, ...props}) => (
+                      <ol className="markdown-list list-decimal pl-5 space-y-2 my-4 marker:text-brand-pink marker:font-medium" {...props} />
+                    ),
+                    li: ({node, ...props}) => (
+                      <li className="markdown-list-item pl-2 mb-1 text-gray-700 dark:text-gray-300" {...props} />
+                    ),
+                    
+                    // Code blocks
+                    pre: ({node, ...props}) => (
+                      <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-4 text-sm border-l-4 border-brand-pink" {...props} />
+                    ),
+                    code: ({node, inline, ...props}) => inline ? (
+                      <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600 dark:text-pink-400" {...props} />
+                    ) : (
+                      <pre className="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm font-mono my-4" {...props} />
+                    ),
+                    
+                    // Blockquotes
+                    blockquote: ({node, ...props}) => (
+                      <blockquote className="border-l-3 border-gray-300 dark:border-gray-600 pl-4 text-gray-600 dark:text-gray-400 my-4 py-1" {...props} />
+                    ),
+                    
+                    // Tables
+                    table: ({node, ...props}) => (
+                      <div className="overflow-x-auto my-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700" {...props} />
+                      </div>
+                    ),
+                    th: ({node, ...props}) => (
+                      <th className="px-4 py-3 bg-gray-50 dark:bg-gray-800 text-left text-sm font-medium text-gray-700 dark:text-gray-300" {...props} />
+                    ),
+                    td: ({node, ...props}) => (
+                      <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700" {...props} />
+                    ),
+                    
+                    // Links
+                    a: ({node, ...props}) => (
+                      <a className="text-brand-pink hover:underline font-medium" target="_blank" rel="noopener noreferrer" {...props} />
+                    ),
+                    
+                    // Horizontal rule
+                    hr: ({node, ...props}) => (
+                      <hr className="my-6 border-gray-200 dark:border-gray-700" {...props} />
+                    ),
+                    
+                    // Text formatting
+                    strong: ({node, ...props}) => (
+                      <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />
+                    ),
+                    em: ({node, ...props}) => (
+                      <em className="italic" {...props} />
+                    )
+                  }}
+                >
+                  {message.text}
+                </ReactMarkdown>
+              </div>
+              
+              {/* URL Previews - now properly placed after message content */}
+              {urls.length > 0 && (
+                <div className="url-previews-container space-y-2 mt-3">
+                  {urls.map((url) => (
+                    <UrlPreview key={url} url={url} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
+        
         {isBot && !isLoading && !message.isError && (
           <button 
             onClick={handleCopy} 
@@ -879,7 +1009,128 @@ const ChatMessage = ({ message }) => {
 
 
 
+// utils/UrlPreviewService.js
+const PREVIEW_CACHE = {};
+const SOCIAL_DOMAINS = ['facebook.com', 'twitter.com', 'instagram.com', 'linkedin.com', 'pinterest.com'];
 
+export const fetchUrlPreview = async (url) => {
+  // Check cache first
+  if (PREVIEW_CACHE[url]) return PREVIEW_CACHE[url];
+
+  try {
+    let previewData;
+    const domain = new URL(url).hostname;
+
+    // Strategy 1: Use OpenGraph.io for social media
+    if (SOCIAL_DOMAINS.some(sd => domain.includes(sd))) {
+      previewData = await fetchOpenGraphPreview(url);
+    }
+    
+    // Strategy 2: Fallback to LinkPreview.net
+    if (!previewData) {
+      previewData = await fetchLinkPreview(url);
+    }
+
+    // Cache the result
+    if (previewData) PREVIEW_CACHE[url] = previewData;
+    return previewData;
+  } catch (error) {
+    console.error("URL preview error:", error);
+    return null;
+  }
+};
+
+// OpenGraph.io implementation
+const fetchOpenGraphPreview = async (url) => {
+  const response = await fetch(
+    `https://opengraph.io/api/1.1/site/${encodeURIComponent(url)}?app_id=YOUR_OPENGRAPH_KEY`
+  );
+  const data = await response.json();
+  
+  return {
+    image: data.ogImage?.url || data.hybridGraph?.image,
+    title: data.ogTitle || data.hybridGraph?.title,
+    description: data.ogDescription || data.hybridGraph?.description,
+    url: data.requestUrl,
+    isSocial: true
+  };
+};
+
+// LinkPreview.net implementation
+const fetchLinkPreview = async (url) => {
+  const response = await fetch(
+    `https://api.linkpreview.net/?key=YOUR_LINKPREVIEW_KEY&q=${encodeURIComponent(url)}`
+  );
+  const data = await response.json();
+  
+  return data.error ? null : {
+    image: data.image,
+    title: data.title,
+    description: data.description,
+    url: data.url,
+    isSocial: false
+  };
+};
+
+
+
+
+
+
+ // components/UrlPreview.jsx
+import { useState, useEffect } from 'react';
+import { fetchUrlPreview } from '../utils/UrlPreviewService';
+
+const UrlPreview = ({ url }) => {
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPreview = async () => {
+      setLoading(true);
+      const data = await fetchUrlPreview(url);
+      setPreview(data);
+      setLoading(false);
+    };
+    loadPreview();
+  }, [url]);
+
+  if (loading) return (
+    <div className="url-preview-loading">
+      <div className="loading-pulse h-24 w-full rounded bg-gray-100 dark:bg-gray-800"></div>
+    </div>
+  );
+
+  if (!preview) return null;
+
+  return (
+    <div className={`url-preview ${preview.isSocial ? 'social-preview' : ''}`}>
+      <a href={url} target="_blank" rel="noopener noreferrer" className="preview-link">
+        {preview.image && (
+          <div className="preview-image-container">
+            <img 
+              src={preview.image} 
+              alt={preview.title || 'Link preview'} 
+              className="preview-image"
+              onError={(e) => e.target.style.display = 'none'}
+            />
+          </div>
+        )}
+        <div className="preview-content">
+          <h4 className="preview-title">{preview.title || 'Untitled'}</h4>
+          <p className="preview-description">
+            {preview.description || 'No description available'}
+          </p>
+          <span className="preview-domain">
+            {new URL(url).hostname.replace('www.', '')}
+          </span>
+        </div>
+      </a>
+    </div>
+  );
+};
+
+    
 
     
 
@@ -1204,6 +1455,20 @@ const TypingArea = ({ onSendMessage, isLoading, theme, toggleTheme, onDeleteChat
   );
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 // Main App Component with all new features
 const App = () => {
   const [theme, setTheme] = useState(() => {
