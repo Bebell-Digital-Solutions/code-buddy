@@ -155,7 +155,7 @@
     .markdown-content h4 {
       margin-top: 1.5em;
       margin-bottom: 0.75em;
-      font-weight: 600;
+      font-weight: 700;
       color: inherit;
     }
     
@@ -531,7 +531,7 @@ CRITICAL FORMATTING RULES:
 - ALWAYS use explicit markdown formatting:
    [NEWLINE]- [SPACE]Item 1[NEWLINE]- [SPACE]Item 2
   - For bullet points: \n- Item 1\n- Item 2
-  - For bold: **bold text**
+  - Use bold text
   - For italics: *italic text*
   - For code: \`single line\` or \`\`\`multiline\`\`\`
   - For sections: ## Heading
@@ -789,7 +789,8 @@ const ChatMessage = ({ message }) => {
                 remarkPlugins={gfmPlugin ? [gfmPlugin] : []}
             
                 
-               components={{
+               
+                components={{
   // Headings
   h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-3 text-brand-pink" {...props} />,
   h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-800 dark:text-gray-200" {...props} />,
