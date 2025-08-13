@@ -49,7 +49,7 @@
   <style>
     .custom-image-widget {
       position: fixed !important;
-      top: 80px !important;
+      top: 50px !important;
       margin: 0 !important;
       padding: 0 !important;
       right: 0px;
@@ -683,37 +683,73 @@ const ChatMessage = ({ message }) => {
               <ReactMarkdown 
                 remarkPlugins={gfmPlugin ? [gfmPlugin] : []}
                 components={{
-                  h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700" {...props} />,
-                  h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700" {...props} />,
-                  h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-4 mb-2 text-brand-pink" {...props} />,
-                  p: ({node, ...props}) => <p className="my-3 leading-relaxed" {...props} />,
-                  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 my-3" {...props} />,
-                  ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1 my-3" {...props} />,
-                  li: ({node, ...props}) => <li className="pl-2" {...props} />,
-                  pre: ({node, ...props}) => (
-                    <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-4" {...props} />
-                  ),
-                  code: ({node, inline, ...props}) => inline ? (
-                    <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm" {...props} />
-                  ) : (
-                    <code className="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm my-4" {...props} />
-                  ),
-                  blockquote: ({node, ...props}) => (
-                    <blockquote className="border-l-4 border-brand-pink pl-4 italic text-gray-600 dark:text-gray-300 my-4" {...props} />
-                  ),
-                  table: ({node, ...props}) => (
-                    <div className="overflow-x-auto my-4">
-                      <table className="min-w-full border-collapse" {...props} />
-                    </div>
-                  ),
-                  th: ({node, ...props}) => (
-                    <th className="bg-gray-100 dark:bg-gray-700 px-4 py-2 text-left border border-gray-200 dark:border-gray-600" {...props} />
-                  ),
-                  td: ({node, ...props}) => (
-                    <td className="px-4 py-2 border border-gray-200 dark:border-gray-600" {...props} />
-                  ),
-                  a: ({node, ...props}) => <a className="text-brand-pink hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
-                }}
+  // Headings
+  h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-3 text-brand-pink" {...props} />,
+  h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-800 dark:text-gray-200" {...props} />,
+  h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-700 dark:text-gray-300" {...props} />,
+  
+  // Paragraphs - single definition
+  p: ({node, ...props}) => (
+    <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap" {...props} />
+  ),
+  
+  // Lists - single consistent definition
+  ul: ({node, ...props}) => (
+    <ul className="markdown-list list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />
+  ),
+  ol: ({node, ...props}) => (
+    <ol className="markdown-list list-decimal pl-5 space-y-2 my-4 marker:text-brand-pink marker:font-medium" {...props} />
+  ),
+  li: ({node, ...props}) => (
+    <li className="markdown-list-item pl-2 mb-1 text-gray-700 dark:text-gray-300" {...props} />
+  ),
+  
+  // Code blocks
+  pre: ({node, ...props}) => (
+    <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-4 text-sm border-l-4 border-brand-pink" {...props} />
+  ),
+  code: ({node, inline, ...props}) => inline ? (
+    <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600 dark:text-pink-400" {...props} />
+  ) : (
+    <pre className="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm font-mono my-4" {...props} />
+  ),
+  
+  // Blockquotes
+  blockquote: ({node, ...props}) => (
+    <blockquote className="border-l-3 border-gray-300 dark:border-gray-600 pl-4 text-gray-600 dark:text-gray-400 my-4 py-1" {...props} />
+  ),
+  
+  // Tables
+  table: ({node, ...props}) => (
+    <div className="overflow-x-auto my-4 rounded-lg border border-gray-200 dark:border-gray-700">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700" {...props} />
+    </div>
+  ),
+  th: ({node, ...props}) => (
+    <th className="px-4 py-3 bg-gray-50 dark:bg-gray-800 text-left text-sm font-medium text-gray-700 dark:text-gray-300" {...props} />
+  ),
+  td: ({node, ...props}) => (
+    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700" {...props} />
+  ),
+  
+  // Links
+  a: ({node, ...props}) => (
+    <a className="text-brand-pink hover:underline font-medium" target="_blank" rel="noopener noreferrer" {...props} />
+  ),
+  
+  // Horizontal rule
+  hr: ({node, ...props}) => (
+    <hr className="my-6 border-gray-200 dark:border-gray-700" {...props} />
+  ),
+  
+  // Text formatting - single definitions
+  strong: ({node, ...props}) => (
+    <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />
+  ),
+  em: ({node, ...props}) => (
+    <em className="italic" {...props} />
+  )
+}}
               >
                 {message.text}
               </ReactMarkdown>
