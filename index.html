@@ -103,90 +103,176 @@
       background-size: 800px 100%;
       animation: loading-anim 3s linear infinite;
     }
-    .markdown-content p { margin-bottom: 1rem; }
-    .markdown-content ul, .markdown-content ol { 
-      margin-left: 1.5rem; 
-      margin-bottom: 1rem; 
-      list-style: revert; 
+       .markdown-content {
+        display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
-    .markdown-content h1, .markdown-content h2, .markdown-content h3 { 
-      font-weight: 600; 
-      margin-bottom: 0.5rem; 
-      margin-top: 1.5rem; 
+
+    .markdown-content > * + * {
+      margin-top: 1.25rem;
     }
-    .markdown-content h1 { font-size: 1.875rem; }
-    .markdown-content h2 { font-size: 1.5rem; }
-    .markdown-content h3 { font-size: 1.25rem; }
+
+    .markdown-content br {
+      display: block;
+      content: "";
+      margin-bottom: 0.75em;
+    }
+    
+    .markdown-content p {
+      margin-bottom: 1.25em;
+    }
+    
+    .markdown-content pre {
+      position: relative;
+      padding-top: 2.5rem;
+      margin: 1.5em 0;
+      padding: 1em;
+      border-radius: 8px;
+      overflow-x: auto;
+      background: #f8f8f8;
+      border-left: 4px solid #DF1783;
+    }
+
+    .markdown-content pre:before {
+      content: '';
+      position: absolute;
+      top: 0.75rem;
+      left: 1rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: #DF1783;
+      box-shadow: 1.25rem 0 0 #DF1783, 2.5rem 0 0 #DF1783;
+    }
+
+    .markdown-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1em 0;
+    }
+    
+    .dark .markdown-content pre {
+      background: #1e293b;
+    }
+    
     .markdown-content code {
-      background-color: #f1f1f1;
-      padding: 0.2em 0.4em;
-      font-size: 85%;
-      border-radius: 6px;
-      font-family: monospace;
-    }
-    .dark .markdown-content code { background-color: #374151; }
-    
-    
-    
-.markdown-content pre {
-  background: #f8f8f8;
-  border-radius: 6px;
-  padding: 1rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-  border-left: 4px solid #DF1783;
-}
-
-.dark .markdown-content pre {
-  background: #1e293b;
-}
-    
-    
-    .markdown-content pre code { 
-      background-color: transparent; 
-      padding: 0; 
-      font-size: 100%; 
-      border-radius: 0; 
-    }
-    .markdown-content a { 
-      color: #DF1783; 
-      text-decoration: underline; 
-    }
-.markdown-content blockquote {
-  border-left: 4px solid #DF1783;
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  font-style: italic;
-  color: #4b5563;
-}
-
-
-    .dark .markdown-content blockquote { 
-      border-left-color: #4b5563; 
-      color: #9ca3af; 
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9em;
     }
     
-  .markdown-content table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1.5rem 0;
+    .markdown-content h1, 
+    .markdown-content h2, 
+    .markdown-content h3, 
+    .markdown-content h4 {
+      margin-top: 1.5em;
+      margin-bottom: 0.75em;
+      font-weight: 700;
+      color: inherit;
+    }
+    
+    /* Lists */
+    .markdown-content ul,
+    .markdown-content ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1em;
+    }
+    
+    .markdown-content li {
+      margin-bottom: 0.5em;
+    }
+    
+    .markdown-content blockquote {
+      background: rgba(223, 23, 131, 0.05);
+      padding: 1rem;
+      border-radius: 0.375rem;
+      border-left: 4px solid #DF1783;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: #4b5563;
+    }
+    
+    .dark .markdown-content blockquote {
+      color: #9ca3af;
+    }
+    
+    .markdown-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+    
+    .markdown-content th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+    
+    .markdown-content td, 
+    .markdown-content th {
+      border: 1px solid #e5e7eb;
+      padding: 0.5rem 1rem;
+    }
+    
+    .dark .markdown-content th {
+      background-color: #374151;
+    }
+
+    /* Custom bullet points */
+    .markdown-content ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 1em 0;
+    }
+
+    .markdown-content ul li {
+      position: relative;
+      padding-left: 1.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .markdown-content ul li:before {
+      content: "•";
+      color: #DF1783;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    .markdown-content strong {
+      font-weight: 600;
+      color: inherit;
+    }
+
+    .markdown-content em {
+      font-style: italic;
+    }
+
+   /* Add these to your styles */
+.markdown-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 1em 0;
 }
 
-.markdown-content th {
-  background-color: #f3f4f6;
-  font-weight: 600;
+.markdown-list-item {
+  position: relative;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
 }
 
-.markdown-content td, 
-.markdown-content th {
-  border: 1px solid #e5e7eb;
-  padding: 0.5rem 1rem;
+.markdown-list-item:before {
+  content: "•";
+  color: #DF1783;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
 }
 
-.dark .markdown-content th {
-  background-color: #374151;
-}   
-  
   
   
  .suggestion-item {
