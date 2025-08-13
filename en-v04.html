@@ -202,8 +202,24 @@
     .dark .markdown-content th {
       background-color: #374151;
     }
+
+
     
-  
+  /* Add to your styles */
+.markdown-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Force line breaks after specific elements */
+.markdown-content br {
+  display: block;
+  content: "";
+  margin-bottom: 0.75em;
+}
+
+
+    
 
 /* Force line break after emoji */
 /* Suggestions Carousel Container */
@@ -473,13 +489,16 @@ For example:
 
 Only proceed with a complete solution when you're confident you understand all requirements. Break down complex solutions into clear steps with explanations.
 
-IMPORTANT FORMATTING INSTRUCTIONS:
-- Always format responses using proper Markdown
-- Use double newlines (\\n\\n) between paragraphs
-- Use bullet points for lists
-- Use code blocks for code examples
-- Use headings to separate sections
-- Use tables for tabular data
+CRITICAL FORMATTING RULES:
+- ALWAYS use explicit markdown formatting:
+  - For bullet points: \n- Item 1\n- Item 2
+  - For bold: **bold text**
+  - For italics: *italic text*
+  - For code: \`single line\` or \`\`\`multiline\`\`\`
+  - For sections: ## Heading
+- Put ALL bullet points on new lines
+- Use TWO newlines between paragraphs
+- NEVER combine markdown with plain text formatting
 `;
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
@@ -786,6 +805,11 @@ const ChatMessage = ({ message }) => {
   
   // Emphasis/italic text
   em: ({node, ...props}) => <em className="italic" {...props} />
+
+  p: ({node, ...props}) => <p className="my-4 leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap" {...props} />,
+  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />,
+  strong: ({node, ...props}) => <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />,
+  em: ({node, ...props}) => <em className="italic text-gray-700 dark:text-gray-300" {...props} />,
 }}
               >
                 {message.text}
