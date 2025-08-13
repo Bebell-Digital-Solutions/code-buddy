@@ -88,6 +88,9 @@
     }
     
     .markdown-content {
+        display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
       line-height: 1.75;
       white-space: pre-wrap;
       word-wrap: break-word;
@@ -233,7 +236,28 @@
       font-style: italic;
     }
 
-    
+   /* Add these to your styles */
+.markdown-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 1em 0;
+}
+
+.markdown-list-item {
+  position: relative;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.markdown-list-item:before {
+  content: "•";
+  color: #DF1783;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+  
 
 /* Force line break after emoji */
 /* Suggestions Carousel Container */
@@ -765,45 +789,49 @@ const ChatMessage = ({ message }) => {
                 remarkPlugins={gfmPlugin ? [gfmPlugin] : []}
             
                 
-                components={{
-  // Headings - removed borders, adjusted spacing
+               components={{
+  // Headings
   h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-3 text-brand-pink" {...props} />,
   h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-800 dark:text-gray-200" {...props} />,
   h3: ({node, ...props}) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-700 dark:text-gray-300" {...props} />,
   
-  // Paragraphs - better spacing and line height
-  p: ({node, ...props}) => <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300" {...props} />,
+  // Paragraphs - single definition
+  p: ({node, ...props}) => (
+    <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-wrap" {...props} />
+  ),
   
-  // Lists - more visible bullets with better spacing
-  ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />,
-  ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2 my-4 marker:text-brand-pink marker:font-medium" {...props} />,
-  li: ({node, ...props}) => <li className="pl-2 mb-1 text-gray-700 dark:text-gray-300" {...props} />,
+  // Lists - single consistent definition
+  ul: ({node, ...props}) => (
+    <ul className="markdown-list list-disc pl-5 space-y-2 my-4 marker:text-brand-pink" {...props} />
+  ),
+  ol: ({node, ...props}) => (
+    <ol className="markdown-list list-decimal pl-5 space-y-2 my-4 marker:text-brand-pink marker:font-medium" {...props} />
+  ),
+  li: ({node, ...props}) => (
+    <li className="markdown-list-item pl-2 mb-1 text-gray-700 dark:text-gray-300" {...props} />
+  ),
   
-  // Code blocks - more distinct
+  // Code blocks
   pre: ({node, ...props}) => (
     <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-4 text-sm border-l-4 border-brand-pink" {...props} />
   ),
-  
-  // Inline code
   code: ({node, inline, ...props}) => inline ? (
     <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600 dark:text-pink-400" {...props} />
   ) : (
     <pre className="block bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto text-sm font-mono my-4" {...props} />
   ),
   
-  // Blockquotes - more subtle
+  // Blockquotes
   blockquote: ({node, ...props}) => (
     <blockquote className="border-l-3 border-gray-300 dark:border-gray-600 pl-4 text-gray-600 dark:text-gray-400 my-4 py-1" {...props} />
   ),
   
-  // Tables - cleaner look
+  // Tables
   table: ({node, ...props}) => (
     <div className="overflow-x-auto my-4 rounded-lg border border-gray-200 dark:border-gray-700">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700" {...props} />
     </div>
   ),
-  
-  // Table cells
   th: ({node, ...props}) => (
     <th className="px-4 py-3 bg-gray-50 dark:bg-gray-800 text-left text-sm font-medium text-gray-700 dark:text-gray-300" {...props} />
   ),
@@ -812,28 +840,22 @@ const ChatMessage = ({ message }) => {
   ),
   
   // Links
-  a: ({node, ...props}) => <a className="text-brand-pink hover:underline font-medium" target="_blank" rel="noopener noreferrer" {...props} />,
+  a: ({node, ...props}) => (
+    <a className="text-brand-pink hover:underline font-medium" target="_blank" rel="noopener noreferrer" {...props} />
+  ),
   
   // Horizontal rule
-  hr: ({node, ...props}) => <hr className="my-6 border-gray-200 dark:border-gray-700" {...props} />,
+  hr: ({node, ...props}) => (
+    <hr className="my-6 border-gray-200 dark:border-gray-700" {...props} />
+  ),
   
-  // Strong/bold text
-  strong: ({node, ...props}) => <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />,
-  
-  // Emphasis/italic text
-  em: ({node, ...props}) => <em className="italic" {...props} />
-
-// Force paragraphs to respect whitespace
-  p: ({node, ...props}) => <p className="my-3 whitespace-pre-wrap" {...props} />,
-  
-  // Custom list handling
-  ul: ({node, ...props}) => <ul className="markdown-list" {...props} />,
-  li: ({node, ...props}) => <li className="markdown-list-item" {...props} />,
-  
-  // Bold/italic handling
-  strong: ({node, ...props}) => <strong className="font-semibold" {...props} />,
-  em: ({node, ...props}) => <em className="italic" {...props} />,
-              
+  // Text formatting - single definitions
+  strong: ({node, ...props}) => (
+    <strong className="font-semibold text-gray-800 dark:text-gray-200" {...props} />
+  ),
+  em: ({node, ...props}) => (
+    <em className="italic" {...props} />
+  )
 }}
               >
                 {message.text}
