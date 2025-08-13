@@ -46,7 +46,7 @@
     }
   </script>
   
-  <style>
+<style>
     .custom-image-widget {
       position: fixed !important;
       top: 80px !important;
@@ -93,29 +93,23 @@
       word-wrap: break-word;
     }
 
+    .markdown-content > * + * {
+      margin-top: 1.25rem;
+    }
 
-.markdown-content > * + * {
-  margin-top: 1.25rem;
-}
-
-
-/* Force line breaks after specific elements */
-.markdown-content br {
-  display: block;
-  content: "";
-  margin-bottom: 0.75em;
-}
-
+    .markdown-content br {
+      display: block;
+      content: "";
+      margin-bottom: 0.75em;
+    }
     
     .markdown-content p {
       margin-bottom: 1.25em;
     }
-
-    
     
     .markdown-content pre {
-        position: relative;
-  padding-top: 2.5rem;
+      position: relative;
+      padding-top: 2.5rem;
       margin: 1.5em 0;
       padding: 1em;
       border-radius: 8px;
@@ -124,28 +118,24 @@
       border-left: 4px solid #DF1783;
     }
 
-
-
-
     .markdown-content pre:before {
-  content: '';
-  position: absolute;
-  top: 0.75rem;
-  left: 1rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background: #DF1783;
-  box-shadow: 1.25rem 0 0 #DF1783, 2.5rem 0 0 #DF1783;
-}
+      content: '';
+      position: absolute;
+      top: 0.75rem;
+      left: 1rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: #DF1783;
+      box-shadow: 1.25rem 0 0 #DF1783, 2.5rem 0 0 #DF1783;
+    }
 
-
-        markdown-content img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin: 1em 0;
-}
+    .markdown-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1em 0;
+    }
     
     .dark .markdown-content pre {
       background: #1e293b;
@@ -166,12 +156,10 @@
       color: inherit;
     }
     
-    
-/* Make lists more compact but readable */
-.markdown-content ul,
-.markdown-content ol {
-  padding-left: 1.5rem;
-}
+    /* Lists */
+    .markdown-content ul,
+    .markdown-content ol {
+      padding-left: 1.5rem;
       margin-bottom: 1em;
     }
     
@@ -180,9 +168,9 @@
     }
     
     .markdown-content blockquote {
-        background: rgba(223, 23, 131, 0.05);
-  padding: 1rem;
-  border-radius: 0.375rem;
+      background: rgba(223, 23, 131, 0.05);
+      padding: 1rem;
+      border-radius: 0.375rem;
       border-left: 4px solid #DF1783;
       padding-left: 1rem;
       margin: 1.5rem 0;
@@ -215,35 +203,35 @@
       background-color: #374151;
     }
 
+    /* Custom bullet points */
+    .markdown-content ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 1em 0;
+    }
 
-.markdown-content ul {
-  list-style-type: none;
-  padding-left: 0;
-  margin: 1em 0;
-}
+    .markdown-content ul li {
+      position: relative;
+      padding-left: 1.5em;
+      margin-bottom: 0.5em;
+    }
 
-.markdown-content ul li {
-  position: relative;
-  padding-left: 1.5em;
-  margin-bottom: 0.5em;
-}
+    .markdown-content ul li:before {
+      content: "•";
+      color: #DF1783;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
 
-.markdown-content ul li:before {
-  content: "•";
-  color: #DF1783;
-  position: absolute;
-  left: 0;
-  font-weight: bold;
-}
+    .markdown-content strong {
+      font-weight: 600;
+      color: inherit;
+    }
 
-.markdown-content strong {
-  font-weight: 600;
-  color: inherit;
-}
-
-.markdown-content em {
-  font-style: italic;
-}
+    .markdown-content em {
+      font-style: italic;
+    }
 
     
 
