@@ -54,9 +54,345 @@
   </script>
   
 <style>
-    /* Existing styles remain unchanged */
-    /* Add new styles for additional features */
+    .custom-image-widget {
+      position: fixed !important;
+      top: 50px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      right: 0px;
+      z-index: 999;
+    }
     
+    .custom-image {
+      width: 70px;
+      height: auto;
+      transition: transform 0.2s;
+    }
+    
+    .custom-image-widget:hover .custom-image {
+      transform: scale(1.05);
+    }  
+
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    @keyframes loading-anim {
+      0% { background-position: -800px 0; }
+      100% { background-position: 800px 0; }
+    }
+    
+    .loading-bar-anim {
+      background: linear-gradient(to right, #DF1783, #e2e8f0, #DF1783);
+      background-size: 800px 100%;
+      animation: loading-anim 3s linear infinite;
+    }
+    
+    .dark .loading-bar-anim {
+      background: linear-gradient(to right, #DF1783, #1f2937, #DF1783);
+      background-size: 800px 100%;
+      animation: loading-anim 3s linear infinite;
+    }
+    
+    .markdown-content {
+        display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .markdown-content > * + * {
+      margin-top: 1.25rem;
+    }
+
+    .markdown-content br {
+      display: block;
+      content: "";
+      margin-bottom: 0.75em;
+    }
+    
+    .markdown-content p {
+      margin-bottom: 1.25em;
+    }
+    
+    .markdown-content pre {
+      position: relative;
+      padding-top: 2.5rem;
+      margin: 1.5em 0;
+      padding: 1em;
+      border-radius: 8px;
+      overflow-x: auto;
+      background: #f8f8f8;
+      border-left: 4px solid #DF1783;
+    }
+
+    .markdown-content pre:before {
+      content: '';
+      position: absolute;
+      top: 0.75rem;
+      left: 1rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: #DF1783;
+      box-shadow: 1.25rem 0 0 #DF1783, 2.5rem 0 0 #DF1783;
+    }
+
+    .markdown-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 1em 0;
+    }
+    
+    .dark .markdown-content pre {
+      background: #1e293b;
+    }
+    
+    .markdown-content code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9em;
+    }
+    
+    .markdown-content h1, 
+    .markdown-content h2, 
+    .markdown-content h3, 
+    .markdown-content h4 {
+      margin-top: 1.5em;
+      margin-bottom: 0.75em;
+      font-weight: 700;
+      color: inherit;
+    }
+    
+    /* Lists */
+    .markdown-content ul,
+    .markdown-content ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1em;
+    }
+    
+    .markdown-content li {
+      margin-bottom: 0.5em;
+    }
+    
+    .markdown-content blockquote {
+      background: rgba(223, 23, 131, 0.05);
+      padding: 1rem;
+      border-radius: 0.375rem;
+      border-left: 4px solid #DF1783;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: #4b5563;
+    }
+    
+    .dark .markdown-content blockquote {
+      color: #9ca3af;
+    }
+    
+    .markdown-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+    
+    .markdown-content th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+    
+    .markdown-content td, 
+    .markdown-content th {
+      border: 1px solid #e5e7eb;
+      padding: 0.5rem 1rem;
+    }
+    
+    .dark .markdown-content th {
+      background-color: #374151;
+    }
+
+    /* Custom bullet points */
+    .markdown-content ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 1em 0;
+    }
+
+    .markdown-content ul li {
+      position: relative;
+      padding-left: 1.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .markdown-content ul li:before {
+      content: "•";
+      color: #DF1783;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    .markdown-content strong {
+      font-weight: 600;
+      color: inherit;
+    }
+
+    .markdown-content em {
+      font-style: italic;
+    }
+
+   /* Add these to your styles */
+.markdown-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 1em 0;
+}
+
+.markdown-list-item {
+  position: relative;
+  padding-left: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.markdown-list-item:before {
+  content: "•";
+  color: #DF1783;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+  
+
+/* Force line break after emoji */
+/* Suggestions Carousel Container */
+.suggestions-carousel {
+  display: flex;
+  gap: 16px;
+  padding: 8px 0;
+  margin-top: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar but keep functionality */
+.suggestions-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Suggestion Card */
+.suggestion-card {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+  position: relative;
+  cursor: pointer;
+  padding: 20px;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.suggestion-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Content */
+.suggestion-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestion-text {
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.dark .suggestion-text {
+  color: #e2e8f0;
+}
+
+/* Example Text */
+.suggestion-example {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #64748b;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.dark .suggestion-example {
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+.example-prefix {
+  font-weight: 600;
+  color: #DF1783;
+}
+
+/* Icon Container */
+.suggestion-icon-container {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 
+              inset 0 -2px 4px rgba(0,0,0,0.1);
+  margin-left: auto;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon-container {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 
+              inset 0 -2px 4px rgba(255,255,255,0.1);
+}
+
+.suggestion-card:hover .suggestion-icon-container {
+  background: linear-gradient(135deg, #DF1783 0%, #FD5D93 100%);
+  box-shadow: none;
+}
+
+.suggestion-icon {
+  font-size: 18px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+  transition: all 0.3s ease;
+}
+
+.dark .suggestion-icon {
+  background-image: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+}
+
+.suggestion-card:hover .suggestion-icon {
+  color: white;
+  background-image: none;
+}
+
     /* Syntax Highlighting */
     .code-block {
       position: relative;
@@ -124,8 +460,6 @@
       background: #374151;
       color: #d1d5db;
     }
-    
-    /* Add more styles as needed for new features */
 </style>
 </head>
 
@@ -140,21 +474,6 @@
     </a>
   </div>
   
-  <!-- Auth Gate (hidden by default) -->
-  <div id="auth-gate" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full">
-      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">Welcome to Code Buddy</h2>
-      <div id="auth-login" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Password</label>
-          <input type="password" id="auth-password" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
-        </div>
-        <button id="auth-submit" class="w-full py-2 px-4 bg-brand-pink text-white rounded-lg font-medium">Unlock</button>
-        <p class="text-sm text-gray-500 dark:text-gray-400 text-center">Your data is stored locally in your browser</p>
-      </div>
-    </div>
-  </div>
-
   <!-- Stats Display -->
   <div id="stats-display" class="fixed top-4 right-4 z-40 hidden sm:block">
     <div class="flex gap-2">
@@ -213,10 +532,6 @@
     </div>
   </div>
 
-
-
-  
-  
   <script type="text/babel">
 // Safety checks first
 if (typeof ReactMarkdown === 'undefined') {
@@ -366,7 +681,6 @@ const DEFAULT_API_CONFIG = {
   max_tokens: 4000
 };
 
-    
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -403,55 +717,8 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-// New Auth Context
-const AuthContext = React.createContext();
-
 // New Stats Context
 const StatsContext = React.createContext();
-
-
-// New Components
-const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
-
-  useEffect(() => {
-    const password = localStorage.getItem('code-buddy-password');
-    if (!password) {
-      // First-time user, set default password
-      localStorage.setItem('code-buddy-password', 'codebuddy123');
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(!!localStorage.getItem('code-buddy-authenticated'));
-    }
-    setAuthChecked(true);
-  }, []);
-
-  const login = (password) => {
-    const storedPassword = localStorage.getItem('code-buddy-password');
-    if (password === storedPassword) {
-      localStorage.setItem('code-buddy-authenticated', 'true');
-      setIsAuthenticated(true);
-      return true;
-    }
-    return false;
-  };
-
-  const changePassword = (oldPassword, newPassword) => {
-    const storedPassword = localStorage.getItem('code-buddy-password');
-    if (oldPassword === storedPassword) {
-      localStorage.setItem('code-buddy-password', newPassword);
-      return true;
-    }
-    return false;
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, changePassword }}>
-      {authChecked ? children : <div className="loading-screen">Loading...</div>}
-    </AuthContext.Provider>
-  );
-};
 
 const StatsProvider = ({ children }) => {
   const [stats, setStats] = useState({
@@ -492,9 +759,6 @@ const StatsProvider = ({ children }) => {
     </StatsContext.Provider>
   );
 };
-
-
-    
 
 // Components
 const BotIcon = () => (
@@ -645,7 +909,7 @@ const ApiKeyModal = ({ onSave, onDelete, onClose, currentConfig }) => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Username</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name (Optional)</label>
               <input 
                 type="text" 
                 value={name} 
@@ -984,7 +1248,7 @@ const Header = ({ onSuggestionClick, userName }) => {
         </div>
 
         <div className="mt-16 sm:mt-24">        
-          <div className="flex gap-5 pb-4 -mx-4 px-4 overflow-x-auto">
+          <div className="flex gap-5 pb-4 -mx-4 px-4 overflow-x-auto suggestions-carousel">
             {SUGGESTIONS.map((suggestion, index) => (
               <SuggestionCard 
                 key={index}
@@ -1449,21 +1713,6 @@ const App = () => {
   });
   const [initError, setInitError] = useState(null);
   const [inputValue, setInputValue] = useState('');
-  const [authChecked, setAuthChecked] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Initialize authentication
-  useEffect(() => {
-    const password = localStorage.getItem('code-buddy-password');
-    if (!password) {
-      // First-time user, set default password
-      localStorage.setItem('code-buddy-password', 'codebuddy123');
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(!!localStorage.getItem('code-buddy-authenticated'));
-    }
-    setAuthChecked(true);
-  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -1631,56 +1880,6 @@ const App = () => {
   const handleSuggestionClick = useCallback((text) => {
     setInputValue(text);
   }, []);
-
-  const login = (password) => {
-    const storedPassword = localStorage.getItem('code-buddy-password');
-    if (password === storedPassword) {
-      localStorage.setItem('code-buddy-authenticated', 'true');
-      setIsAuthenticated(true);
-      return true;
-    }
-    return false;
-  };
-
-  if (!authChecked) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">Welcome to Code Buddy</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Password</label>
-              <input 
-                type="password" 
-                id="auth-password" 
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700"
-                onKeyDown={(e) => e.key === 'Enter' && document.getElementById('auth-submit').click()}
-              />
-            </div>
-            <button 
-              id="auth-submit"
-              onClick={() => {
-                const password = document.getElementById('auth-password').value;
-                if (login(password)) {
-                  setIsAuthenticated(true);
-                } else {
-                  alert('Incorrect password');
-                }
-              }}
-              className="w-full py-2 px-4 bg-brand-pink text-white rounded-lg font-medium"
-            >
-              Unlock
-            </button>
-            <p className="text-sm text-gray-500 dark:text-gray-400 text-center">Your data is stored locally in your browser</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (initError) {
     return (
